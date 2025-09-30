@@ -22,8 +22,10 @@ import {
     DocumentDuplicateIcon,
     FolderIcon,
     HomeIcon,
+    KeyIcon,
     UserGroupIcon,
     UsersIcon,
+    VideoCameraIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
@@ -38,30 +40,10 @@ function classNames(...classes) {
 const navigation = [
     { name: 'Dashboard', href: route('dashboard'), icon: HomeIcon, current: true },
     { name: 'Category', href: route('category.index'), icon: FolderIcon, current: false },
-    {
-        name: 'Admin',
-        icon: UserGroupIcon,
-        current: false,
-        children: [
-            { name: 'Admin', href: route('admin.index') },
-            { name: 'Role', href: route('role.index')}
-        ],
-    },
-    {
-        name: 'Dropdown',
-        icon: UserGroupIcon,
-        current: false,
-        children: [
-            { name: 'One', href: '#' },
-            { name: 'Two', href: '#'},
-            { name: 'Three', href: '#' },
-        ],
-    },
-    { name: 'Department', href: '#', icon: UsersIcon, current: true },
-    { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-    { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-    { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+    { name: 'Channel', href: route('channel.index'), icon: FolderIcon, current: false },
+    { name: 'API KEY', href: route('api-key.index'), icon: KeyIcon, current: false },
+    { name: 'Video', href: route('video.index'), icon: VideoCameraIcon, current: false },
+
 ];
 
 const teams = [

@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            PermissionSeeder::class
+            // PermissionSeeder::class,
+            ChannelSeeder::class,
+            ApiKeySeeder::class
         ]);
     }
 }

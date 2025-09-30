@@ -1,11 +1,11 @@
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
-import Input from '@/Components/Form/Input';
-import SubmitButton from '@/Components/Form/SubmitButton';
-import InputLabel from '@/Components/Form/InputLabel';
 import BreadcumComponent from '@/Components/Dashboard/BreadcumComponent';
-import ImageFile from '@/Components/Form/ImageFile';
+import { Button } from '@headlessui/react';
+import ThumbnailInput from '@/Components/ThumbnailInput';
+import InputLabel from '@/Components/InputLabel';
+import { Input } from '@/Components/input';
 
 
 export default function Create({ auth, category }) {
@@ -18,7 +18,7 @@ export default function Create({ auth, category }) {
 
     function submit(e) {
         e.preventDefault()
-        post(route('categoryupdate', category.id));
+        put(route('category.update', category.id));
     }
 
     return (
@@ -35,32 +35,25 @@ export default function Create({ auth, category }) {
                     <div className=" px-2 py-2 sm:px-6 lg:px-4 mx-auto">
                         <form onSubmit={submit}>
                             <div>
-                                <InputLabel isRequired={true} labelFor="name" />
+                                <InputLabel htmlFor="name" > Some </InputLabel>
                                 <Input id="name" type="text" name="name" value={data.name} autoComplete="name" placeholder="name" onChange={(e) => setData('name', e.target.value)} />
                                 <p className="text-sm text-red-600 mt-2">{errors.name}</p>
                             </div>
 
                             <div>
-                                <InputLabel isRequired={true} labelFor="Description" />
+                                <InputLabel htmlFor="Description" > Some </InputLabel>
                                 <textarea id="description" rows={5} type="file" name="description" value={data.description} placeholder="Write about Category." onChange={(e) => setData('description', e.target.value)}
                                     className="border py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">{data.description}</textarea>
                                 <p className="text-sm text-red-600 mt-2">{errors.description}</p>
                             </div>
 
-                            {/* <div>
-                                <InputLabel isRequired={true} labelFor="thumbnail" />
-                                <input id="thumbnail" type="file" name="thumbnail" placeholder="thumbnail" onChange={(e) => setData('thumbnail', e.target.files[0])} />
-                                <p className="text-sm text-red-600 mt-2">{errors.thumbnail}</p>
-                            </div> */}
-
-
                             <div>
-                                <InputLabel isRequired={true} labelFor="thumbnail" />
-                                <ImageFile name="thumbnail" setData={setData} errors={errors} placeholder="Feature Photo" />
+                                <InputLabel htmlFor="thumbnail" > Some </InputLabel>
+                                <ThumbnailInput name="thumbnail" setData={setData} errors={errors} placeholder="Feature Photo" />
                             </div>
 
                             <div>
-                                <InputLabel isRequired={true} labelFor="status" />
+                                <InputLabel htmlFor="status" > Some </InputLabel>
                                 <select id="status" name="status" className="py-2 px-4 pr-9 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
                                     onChange={(e) => setData('status', e.target.value)}>
                                     <option value="1">Yes</option>
@@ -68,7 +61,7 @@ export default function Create({ auth, category }) {
                                 </select>
                                 <p className="text-sm text-red-600 mt-2">{errors.status}</p>
                             </div>
-                            <SubmitButton />
+                            <Button type="submit" disabled={processing} >Update </Button>
                         </form>
                     </div>
                 </div>
