@@ -10,8 +10,9 @@ return new class extends Migration {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('channel_id')->constrained('channels');
-            $table->string('template_file');
+            $table->string('description')->nullable();
+            $table->string('template_file')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

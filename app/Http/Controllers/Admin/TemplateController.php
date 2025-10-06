@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Template;
-use App\Models\Video;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class VideoController extends Controller
+class TemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $videos = Video::paginate(10);
-        return Inertia::render('Admin/Video/Index',['videos'=> $videos]);
+        $templates = Template::paginate(10);
+        // return $categories;
+        return Inertia::render('Admin/Template/Index',['templates'=> $templates]);
     }
 
     /**
@@ -24,8 +24,7 @@ class VideoController extends Controller
      */
     public function create()
     {
-        $templates = Template::get();
-        return Inertia::render('Admin/Video/Create', ['templates' => $templates]);
+        return Inertia::render('Admin/Template/Create');
     }
 
     /**
@@ -33,7 +32,18 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required'
+        ]);
+
+        $data=[
+            'name'=> $request->name,
+            'description'=> $request->description,
+        ];
+
+        Template::create($data);
+
+        return to_route('template.index');
     }
 
     /**
@@ -65,6 +75,7 @@ class VideoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Template::where('id', $id)->delete();
+        return redirect()->route('template.index');
     }
 }

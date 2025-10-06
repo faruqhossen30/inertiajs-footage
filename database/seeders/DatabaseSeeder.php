@@ -24,8 +24,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // PermissionSeeder::class,
+            PropertyTypeSeeder::class,
             ChannelSeeder::class,
-            ApiKeySeeder::class
+            ApiKeySeeder::class,
+            TemplateSeeder::class
         ]);
     }
 }

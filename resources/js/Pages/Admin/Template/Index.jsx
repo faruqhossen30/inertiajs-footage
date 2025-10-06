@@ -1,5 +1,5 @@
 import BreadcumComponent from '@/Components/Dashboard/BreadcumComponent';
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ListBulletIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { EyeIcon } from '@heroicons/react/24/solid';
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -9,18 +9,18 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import SearchFilter from '@/Components/Custom/SearchFilter';
 
 
-export default function Index({ auth, categories }) {
+export default function Index({ templates }) {
     return (
         <AuthenticatedLayout>
             <div className="flex justify-between items-center">
-                <BreadcumComponent pageOne="Categories" pageOneRoute="category.index" />
-                <Button color="light" href={route('category.create')}>
+                <BreadcumComponent pageOne="Templates" pageOneRoute="template.index" />
+                <Button color="light" href={route('template.create')}>
                     <PlusIcon />
-                    Add item
+                    Add Template
                 </Button>
             </div>
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
-                <SearchFilter routeName={'category.index'} />
+                <SearchFilter routeName={'template.index'} />
                 <Table dense >
                     <TableHead className="bg-gray-50 dark:bg-slate-800">
                         <TableRow>
@@ -32,21 +32,25 @@ export default function Index({ auth, categories }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {categories.data.map((item) => (
+                        {templates.data.map((item) => (
                             <TableRow key={item.id}>
                                 <TableCell className="font-medium">
                                     <span className="mx-5">{item.id}</span>
                                 </TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell className="text-zinc-500 flex space-x-1">
-                                    <Link href={route('category.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
+                                    <Link href={route('template.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
+                                        <ListBulletIcon className="w-4 h-4" />
+                                    </Link>
+                                    
+                                    <Link href={route('template.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
                                         <EyeIcon className="w-4 h-4" />
                                     </Link>
 
-                                    <Link href={route('category.edit', item.id)} className="border p-1 rounded-md dark:border-gray-700 text-green-500">
+                                    <Link href={route('template.edit', item.id)} className="border p-1 rounded-md dark:border-gray-700 text-green-500">
                                         <PencilIcon className="w-4 h-5" />
                                     </Link>
-                                    <Link href={route('category.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-red-500">
+                                    <Link onClick={(e) => !confirm("Are you sure?") && e.preventDefault()} href={route('template.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-red-500">
                                         <TrashIcon className="w-4 h-4 " />
                                     </Link>
                                 </TableCell>
@@ -54,7 +58,7 @@ export default function Index({ auth, categories }) {
                         ))}
                     </TableBody>
                 </Table>
-                <Pagination pagination={categories} links={categories.links} />
+                <Pagination pagination={templates} links={templates.links} />
             </div>
 
 

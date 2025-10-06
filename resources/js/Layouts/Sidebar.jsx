@@ -13,6 +13,7 @@ import {
     TransitionChild,
 } from '@headlessui/react'
 import {
+    AdjustmentsHorizontalIcon,
     Bars3Icon,
     BellIcon,
     CalendarIcon,
@@ -42,8 +43,10 @@ const navigation = [
     { name: 'Category', href: route('category.index'), icon: FolderIcon, current: false },
     { name: 'Channel', href: route('channel.index'), icon: FolderIcon, current: false },
     { name: 'API KEY', href: route('api-key.index'), icon: KeyIcon, current: false },
+    { name: 'Template', href: route('template.index'), icon: AdjustmentsHorizontalIcon, current: false },
+    { name: 'Property Type', href: route('admin.property.type.index'), icon: AdjustmentsHorizontalIcon, current: false },
+    { name: 'Add Template Property', href: route('admin.template.property.index'), icon: AdjustmentsHorizontalIcon, current: false },
     { name: 'Video', href: route('video.index'), icon: VideoCameraIcon, current: false },
-
 ];
 
 const teams = [
