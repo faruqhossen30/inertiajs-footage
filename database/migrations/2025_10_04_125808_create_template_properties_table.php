@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('template_properties', function (Blueprint $table) {
             $table->id();
             $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
+            $table->string('name')->nullable(); // Property name/key
             $table->string('key'); // Property name/key
             $table->text('value')->nullable(); // Property value
             $table->string('type')->default('text'); // Property type (text, number, boolean, etc.)

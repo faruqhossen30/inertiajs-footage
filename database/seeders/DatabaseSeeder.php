@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             PropertyTypeSeeder::class,
             ChannelSeeder::class,
             ApiKeySeeder::class,
-            TemplateSeeder::class
+            // TemplateSeeder::class
         ]);
     }
 }

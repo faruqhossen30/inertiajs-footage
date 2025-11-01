@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
-import { Button } from '@/Components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
-import { Textarea } from '@/Components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
-import { Switch } from '@/Components/ui/switch';
 import { ArrowLeft, Save } from 'lucide-react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 const inputTypes = [
     { value: 'text', label: 'Text' },
@@ -72,7 +65,7 @@ export default function Edit({ propertyType }) {
     };
 
     return (
-        <AdminLayout>
+        <AuthenticatedLayout>
             <Head title={`Edit ${propertyType.name}`} />
 
             <div className="space-y-6">
@@ -252,6 +245,6 @@ export default function Edit({ propertyType }) {
                     </div>
                 </form>
             </div>
-        </AdminLayout>
+        </AuthenticatedLayout>
     );
 }

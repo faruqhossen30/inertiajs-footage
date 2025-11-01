@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->nullable();
+            $table->string('folder')->nullable();
+            $table->enum('status',['list','run','done'])->default('list');
             $table->timestamps();
         });
     }

@@ -10,6 +10,10 @@ class Template extends Model
     protected $fillable = [
         'name',
         'description',
+        'file_name',
+        'file_path',
+        'thumbnail',
+        'pc',
         'status'
     ];
 

@@ -178,6 +178,8 @@ export default function Create({ templates, propertyTypes, template_id }) {
                                     )}
                                 </div>
 
+                                
+
                                 <div className="space-y-2">
                                     <label htmlFor="key" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Property Key *
@@ -193,6 +195,8 @@ export default function Create({ templates, propertyTypes, template_id }) {
                                         <p className="text-sm text-red-500">{errors.key}</p>
                                     )}
                                 </div>
+
+
                             </div>
 
                             <div className="space-y-2">

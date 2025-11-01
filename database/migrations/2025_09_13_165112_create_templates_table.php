@@ -11,7 +11,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->string('template_file')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_path')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('pc')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

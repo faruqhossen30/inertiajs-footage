@@ -39,11 +39,11 @@ export default function Index({ templates }) {
                                 </TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell className="text-zinc-500 flex space-x-1">
-                                    <Link href={route('template.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
+                                    <Link href={route('template.show', item.id)}  className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
                                         <ListBulletIcon className="w-4 h-4" />
                                     </Link>
                                     
-                                    <Link href={route('template.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
+                                    <Link href={route('template.show', item.id)} className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
                                         <EyeIcon className="w-4 h-4" />
                                     </Link>
 

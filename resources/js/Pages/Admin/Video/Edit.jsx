@@ -1,24 +1,24 @@
-
 import { Head, useForm } from '@inertiajs/react';
-import BreadcumComponent from '@/Components/Dashboard/BreadcumComponent';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import ThumbnailInput from '@/Components/ThumbnailInput';
+import BreadcumComponent from '@/Components/Dashboard/BreadcumComponent';
 import InputLabel from '@/Components/InputLabel';
 import { Input } from '@/Components/input';
 import { Button } from '@/Components/button';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Select } from '@/Components/select';
-import { Field, Label } from '@/components/fieldset'
 
-
-export default function Create({ templates }) {
-    const [timelineItems, setTimelineItems] = useState([]);
+export default function Edit({ video, templates }) {
+    const [timelineItems, setTimelineItems] = useState(() => (video.video_templates || []).map((vt) => ({
+        id: `itm_${vt.id}`,
+        templateId: vt.template_id,
+        type: 'template',
+        label: (templates.find(t => t.id === vt.template_id) || {}).name || `Template ${vt.template_id}`,
+        start: vt.start,
+        duration: vt.duration,
+        propertyValues: vt.properties || {},
+    })));
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const { data, setData, post, processing, errors, reset } = useForm({
-        title: '',
-        timeline: [],
-    });
 
     const PIXELS_PER_SECOND = 20;
     const TIMELINE_WIDTH = 1200;
@@ -28,29 +28,25 @@ export default function Create({ templates }) {
         [timelineItems, selectedItemId]
     );
 
-    function handleDragStart(e, paletteItem) {
-        e.dataTransfer.setData('application/x-palette-item', JSON.stringify(paletteItem));
+    function handleDragStart(e, template) {
+        e.dataTransfer.setData('application/x-palette-item', JSON.stringify(template));
         e.dataTransfer.effectAllowed = 'copy';
     }
-
 
     function handleTimelineDrop(e) {
         e.preventDefault();
         const data = e.dataTransfer.getData('application/x-palette-item');
-        console.log('handleTimelineDrop', handleTimelineDrop);
-
-
         if (!data) return;
-        const paletteItem = JSON.parse(data);
+        const template = JSON.parse(data);
         const bounding = e.currentTarget.getBoundingClientRect();
         const dropX = e.clientX - bounding.left;
         const startSeconds = Math.max(0, Math.round(dropX / PIXELS_PER_SECOND));
 
         const newItem = {
             id: `itm_${Date.now()}`,
-            templateId: paletteItem.id,
+            templateId: template.id,
             type: 'template',
-            label: paletteItem.name,
+            label: template.name,
             start: startSeconds,
             duration: 5,
             propertyValues: {},
@@ -85,17 +81,8 @@ export default function Create({ templates }) {
         return (templates || []).find(t => t.id === selectedItem.templateId) || null;
     }, [templates, selectedItem?.templateId]);
 
-    // Single-track interactions: click-to-create, drag move, resize left/right
     const trackRef = useRef(null);
     const [dragState, setDragState] = useState(null);
-
-    function getSecondsFromClientX(clientX) {
-        const rect = trackRef.current?.getBoundingClientRect();
-        if (!rect) return 0;
-        const x = clientX - rect.left;
-        return Math.max(0, Math.round(x / PIXELS_PER_SECOND));
-    }
-
 
     function beginMove(item, clientX) {
         setDragState({
@@ -115,11 +102,6 @@ export default function Create({ templates }) {
             originalDuration: item.duration,
         });
     }
-
-    useEffect(() => {
-        // keep form data in sync with timeline items
-        setData('timeline', timelineItems);
-    }, [timelineItems]);
 
     useEffect(() => {
         function onMouseMove(e) {
@@ -156,49 +138,52 @@ export default function Create({ templates }) {
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('mouseup', onMouseUp);
         };
-    }, [dragState, PIXELS_PER_SECOND]);
+    }, [dragState]);
+
+    const form = useForm({
+        title: video.title || '',
+        timeline: timelineItems,
+    });
+
+    useEffect(() => {
+        form.setData('timeline', timelineItems);
+    }, [timelineItems]);
 
     function handleSave() {
-        post(route('video.store'));
+        form.put(route('video.update', video.id));
     }
 
     return (
         <AuthenticatedLayout>
-            <Head title="Create Video" />
+            <Head title="Edit Video" />
             <div className="">
-                {/* <BreadcumComponent title="Create Video" /> */}
+                <BreadcumComponent title="Edit Video" />
                 <div className="mt-4 grid grid-cols-12 gap-4">
                     <div className="col-span-3 xl:col-span-2">
                         <div className="rounded-lg border border-slate-200 bg-white">
                             <div className="px-4 py-3 border-b border-slate-200 font-semibold">Elements</div>
                             <div className="p-3 space-y-2">
-                                {(templates || []).map(template => {
-                                    console.log(template);
-
-                                    return (
-                                        <div
-                                            key={template.id}
-                                            draggable
-                                            onDragStart={(e) => handleDragStart(e, template)}
-                                            className="cursor-grab active:cursor-grabbing rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-2 flex items-center gap-2"
-                                        >
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-slate-200 text-slate-600 text-xs uppercase">{template.name[0]}</span>
-                                            <span className="text-sm">{template.name}</span>
-                                        </div>
-                                    )
-                                })}
-
+                                {(templates || []).map(template => (
+                                    <div
+                                        key={template.id}
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, template)}
+                                        className="cursor-grab active:cursor-grabbing rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-2 flex items-center gap-2"
+                                    >
+                                        <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-slate-200 text-slate-600 text-xs uppercase">{template.name[0]}</span>
+                                        <span className="text-sm">{template.name}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* This is the timeline*/}
                     <div className="col-span-9 xl:col-span-10">
                         <div className="rounded-lg border border-slate-200 bg-white">
                             <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
                                 <div className="font-semibold">Timeline</div>
                                 <div className="flex items-center gap-2">
-                                    <Button size="sm" onClick={handleSave} disabled={processing || timelineItems.length === 0}>Save</Button>
+                                    <Button size="sm" onClick={handleSave} disabled={form.processing || timelineItems.length === 0}>Save</Button>
                                     <Button size="sm" variant="secondary" onClick={() => setTimelineItems([])}>Clear</Button>
                                     {selectedItem && (
                                         <Button size="sm" variant="destructive" onClick={removeSelectedItem}>Remove Selected</Button>
@@ -225,7 +210,6 @@ export default function Create({ templates }) {
                                             const left = item.start * PIXELS_PER_SECOND;
                                             const width = Math.max(10, item.duration * PIXELS_PER_SECOND);
                                             const isSelected = item.id === selectedItemId;
-                                            console.log('item', item);
 
                                             return (
                                                 <div
@@ -255,19 +239,9 @@ export default function Create({ templates }) {
                                 </div>
                             </div>
                         </div>
-                        <Field>
-                            <Label>Title</Label>
-                            <Input
-                                type="text"
-                                name="title"
-                                value={data.title}
-                                onChange={(e) => setData('title', e.target.value)}
-                            />
-                        </Field>
                     </div>
                 </div>
 
-                {/* This is the drawer*/}
                 <div className={`fixed top-0 z-50 right-0 h-full w-full max-w-md bg-white border-l border-slate-200 shadow-xl transition-transform duration-300 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
                         <div className="font-semibold">Properties</div>
@@ -281,7 +255,6 @@ export default function Create({ templates }) {
                                     <div className="text-sm text-slate-600 mt-1 capitalize">{selectedItem.type}</div>
                                 </div>
 
-                                {/* Template-driven fields */}
                                 {selectedItemTemplate && (selectedItemTemplate.properties || []).map((prop) => {
                                     const propType = prop.property_type;
                                     const key = prop.key;
@@ -362,7 +335,6 @@ export default function Create({ templates }) {
                                         );
                                     }
 
-                                    // default text input
                                     return (
                                         <div key={prop.id}>
                                             <InputLabel htmlFor={`prop-${key}`} value={prop.key} />
@@ -371,7 +343,6 @@ export default function Create({ templates }) {
                                         </div>
                                     );
                                 })}
-
 
                                 <div className="flex items-center justify-between pt-2">
                                     <Button variant="secondary" onClick={() => setIsDrawerOpen(false)}>Done</Button>
@@ -387,3 +358,5 @@ export default function Create({ templates }) {
         </AuthenticatedLayout>
     );
 }
+
+

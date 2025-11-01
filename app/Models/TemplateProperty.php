@@ -9,6 +9,7 @@ class TemplateProperty extends Model
 {
     protected $fillable = [
         'template_id',
+        'name',
         'key',
         'value',
         'type',

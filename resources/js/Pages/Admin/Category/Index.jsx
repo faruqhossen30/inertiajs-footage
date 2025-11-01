@@ -32,10 +32,10 @@ export default function Index({ auth, categories }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {categories.data.map((item) => (
+                        {categories.data.map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell className="font-medium">
-                                    <span className="mx-5">{item.id}</span>
+                                    <span className="mx-5">{index +1}</span>
                                 </TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell className="text-zinc-500 flex space-x-1">

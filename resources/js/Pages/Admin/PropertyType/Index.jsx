@@ -6,6 +6,7 @@ import { Dropdown, DropdownButton, DropdownMenu, DropdownItem } from '@/Componen
 import { MoreHorizontal, Plus, Edit, Trash2, Eye, ToggleLeft, ToggleRight } from 'lucide-react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Button } from '@/Components/button';
+import { EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
 
 export default function Index({ propertyTypes }) {
     const handleDelete = (id) => {
@@ -81,8 +82,16 @@ export default function Index({ propertyTypes }) {
                                         <TableCell className="max-w-xs truncate">
                                             {propertyType.description || '-'}
                                         </TableCell>
-                                        <TableCell className="text-right">
-                                            <Dropdown>
+                                        <TableCell className="text-right flex space-x-1">
+                                        <Link href="#" className="border p-1 rounded-md dark:border-gray-700 text-green-500">
+                                                <EyeIcon className="w-4 h-5" />
+                                            </Link>
+
+                                            <Link href={route('admin.property.type.edit', propertyType.id)} className="border p-1 rounded-md dark:border-gray-700 text-green-500">
+                                                <PencilIcon className="w-4 h-5" />
+                                            </Link>
+
+                                            {/* <Dropdown>
                                                 <DropdownButton>
                                                     <Button variant="ghost" className="h-8 w-8 p-0">
                                                         <MoreHorizontal className="h-4 w-4" />
@@ -118,7 +127,7 @@ export default function Index({ propertyTypes }) {
                                                         Delete
                                                     </DropdownItem>
                                                 </DropdownMenu>
-                                            </Dropdown>
+                                            </Dropdown> */}
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -147,11 +156,10 @@ export default function Index({ propertyTypes }) {
                                 <Link
                                     key={index}
                                     href={link.url || '#'}
-                                    className={`px-3 py-2 rounded-md text-sm ${
-                                        link.active
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                                    } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`px-3 py-2 rounded-md text-sm ${link.active
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                        } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />
                             ))}
