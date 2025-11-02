@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Video extends Model
 {
@@ -19,5 +20,15 @@ class Video extends Model
     public function templates(): HasMany
     {
         return $this->hasMany(VideoTemplate::class)->orderBy('start');
+    }
+
+    public function audio(): HasOne
+    {
+        return $this->hasOne(Audio::class);
+    }
+
+    public function footage(): HasMany
+    {
+        return $this->hasMany(Footage::class);
     }
 }

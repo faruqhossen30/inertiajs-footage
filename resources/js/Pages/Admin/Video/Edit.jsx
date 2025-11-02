@@ -8,7 +8,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Select } from '@/Components/select';
 
 export default function Edit({ video, templates }) {
-    const [timelineItems, setTimelineItems] = useState(() => (video.video_templates || []).map((vt) => ({
+    console.log(video);
+    
+    const [timelineItems, setTimelineItems] = useState(() => (video.templates || []).map((vt) => ({
         id: `itm_${vt.id}`,
         templateId: vt.template_id,
         type: 'template',

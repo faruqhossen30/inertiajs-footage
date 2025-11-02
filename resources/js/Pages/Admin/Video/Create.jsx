@@ -9,15 +9,23 @@ import { Button } from '@/Components/button';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Select } from '@/Components/select';
 import { Field, Label } from '@/components/fieldset'
+import VideoFootageComponant from '@/Components/Timeline/VideoFootageComponant';
 
 
 export default function Create({ templates }) {
     const [timelineItems, setTimelineItems] = useState([]);
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+
+
+
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
+        audio: '',
         timeline: [],
+        footages: [],
+        music: '',
     });
 
     const PIXELS_PER_SECOND = 20;
@@ -54,6 +62,7 @@ export default function Create({ templates }) {
             start: startSeconds,
             duration: 5,
             propertyValues: {},
+            footages: [],
         };
         setTimelineItems(prev => [...prev, newItem]);
         setSelectedItemId(newItem.id);
@@ -159,7 +168,9 @@ export default function Create({ templates }) {
     }, [dragState, PIXELS_PER_SECOND]);
 
     function handleSave() {
-        post(route('video.store'));
+        // post(route('video.store'));
+        console.log(data);
+        
     }
 
     return (
@@ -268,8 +279,8 @@ export default function Create({ templates }) {
                 </div>
 
                 {/* This is the drawer*/}
-                <div className={`fixed top-0 z-50 right-0 h-full w-full max-w-md bg-white border-l border-slate-200 shadow-xl transition-transform duration-300 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+                <div className={`fixed top-0 shadow-2xl z-50 right-0 h-screen overflow-y-auto w-full max-w-md bg-white border-l border-slate-200 transition-transform duration-300 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className="flex items-center justify-between bg-gray-200 px-4 py-3 border-b border-slate-200">
                         <div className="font-semibold">Properties</div>
                         <Button size="sm" variant="ghost" onClick={() => setIsDrawerOpen(false)}>Close</Button>
                     </div>
@@ -298,7 +309,7 @@ export default function Create({ templates }) {
 
                                     if (propType?.input_type === 'color') {
                                         return (
-                                            <div key={prop.id}>
+                                            <div key={prop.id} >
                                                 <InputLabel htmlFor={`prop-${key}`} value={prop.key} />
                                                 <Input id={`prop-${key}`} type="color" value={value || prop.value || '#000000'} onChange={(e) => setValue(e.target.value)} />
                                             </div>
@@ -364,13 +375,21 @@ export default function Create({ templates }) {
 
                                     // default text input
                                     return (
-                                        <div key={prop.id}>
-                                            <InputLabel htmlFor={`prop-${key}`} value={prop.key} />
+                                        <div key={prop.id} className="flex items-center gap-2">
+                                            <InputLabel htmlFor={`prop-${key}`} value={prop.key} className="w-[20%] capitalize" />
                                             <Input id={`prop-${key}`} value={value || prop.value || ''}
                                                 onChange={(e) => setValue(e.target.value)} />
                                         </div>
                                     );
                                 })}
+
+                                <div className="flex items-center gap-2">
+                                    <InputLabel htmlFor="audio"  className="w-[20%] capitalize" > Audio </InputLabel>
+                                    <Input id="audio" type="file" onChange={(e) => setData('music', e.target.files[0])}  />
+                                </div>
+                                <VideoFootageComponant setData={setData} errors={errors} />
+
+                                
 
 
                                 <div className="flex items-center justify-between pt-2">

@@ -51,7 +51,7 @@ export default function Index({ videos }) {
                                         <Badge className="capitalize">{item.status ?? 'N/A'}</Badge>
                                     </TableCell>
                                     <TableCell className="text-zinc-500 flex space-x-1">
-                                        <Link href={route('video.destroy', item.id)} method="Delete" as="button" className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
+                                        <Link href={route('video.show', item.id)} className="border p-1 rounded-md dark:border-gray-700 text-gray-500">
                                             <EyeIcon className="w-4 h-4" />
                                         </Link>
 

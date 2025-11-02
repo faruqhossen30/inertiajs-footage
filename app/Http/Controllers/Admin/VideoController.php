@@ -45,6 +45,18 @@ class VideoController extends Controller
             'timeline.*.propertyValues' => ['nullable', 'array'],
         ]);
 
+         // Handle file upload
+        //  if ($request->hasFile('file')) {
+        //     $file = $request->file('file');
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $filePath = $file->move(public_path('uploads/audios'), $fileName);
+
+        //     $data['file_name'] = $fileName;
+        //     // $data['file_path'] = 'uploads/templates/' . $fileName;
+        //     $validated['file_path'] = $filePath;
+
+        // }
+
         $video = Video::create([
             'title' => $validated['title'] ?? null,
         ]);
@@ -80,7 +92,7 @@ class VideoController extends Controller
      */
     public function edit(string $id)
     {
-        $video = Video::with(['videoTemplates' => function ($q) {
+        $video = Video::with(['templates' => function ($q) {
             $q->orderBy('start');
         }])->findOrFail($id);
 
@@ -115,7 +127,7 @@ class VideoController extends Controller
         ]);
 
         // Replace existing timeline
-        $video->videoTemplates()->delete();
+        $video->templates()->delete();
 
         $rows = collect($validated['timeline'])
             ->map(function ($item) {
@@ -128,7 +140,7 @@ class VideoController extends Controller
             })->all();
 
         if (!empty($rows)) {
-            $video->videoTemplates()->createMany($rows);
+            $video->templates()->createMany($rows);
         }
 
         return redirect()->route('video.index')->with('success', 'Video updated');
