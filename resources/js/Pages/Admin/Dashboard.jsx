@@ -1,7 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import socket from '@/socket';
-import { useEffect } from 'react';
 
 export default function Dashboard() {
     // useEffect(() => {
@@ -14,9 +12,6 @@ export default function Dashboard() {
     // }, []);
 
 
-    function onTest() {
-        // socket.emit("test", "test");
-    }
 
     return (
         <AuthenticatedLayout
@@ -24,13 +19,6 @@ export default function Dashboard() {
         >
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="mx-auto sm:px-6 lg:px-8">
-                    <div>
-                        <button onClick={() => onTest()} className="p-2 bg-gray-500 text-gray-200 rounded-lg">Check System</button>
-                    </div>
-                </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

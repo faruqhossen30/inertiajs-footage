@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,12 +23,10 @@ class DatabaseSeeder extends Seeder
             'password'=> Hash::make('123')
         ]);
 
+        Category::factory(5)->create();
+
         $this->call([
-            // PermissionSeeder::class,
-            PropertyTypeSeeder::class,
-            ChannelSeeder::class,
             ApiKeySeeder::class,
-            // TemplateSeeder::class
         ]);
     }
 }

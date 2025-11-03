@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Template;
 use App\Models\Video;
 use App\Models\VideoTemplate;
+use App\Models\VideoTemplateFootage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,8 +17,8 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::withCount('templates')->latest('id')->paginate(10);
-        return Inertia::render('Admin/Video/Index',['videos'=> $videos]);
+        $videos = Video::latest('id')->paginate(10);
+        return Inertia::render('Admin/Video/Index', ['videos' => $videos]);
     }
 
     /**
@@ -25,10 +26,7 @@ class VideoController extends Controller
      */
     public function create()
     {
-        $templates = Template::with(['properties' => function ($q) {
-            $q->ordered()->with('propertyType');
-        }])->get();
-        return Inertia::render('Admin/Video/Create', ['templates' => $templates]);
+        return Inertia::render('Admin/Video/Create');
     }
 
     /**
@@ -43,9 +41,10 @@ class VideoController extends Controller
             'timeline.*.start' => ['required', 'integer', 'min:0'],
             'timeline.*.duration' => ['required', 'integer', 'min:1'],
             'timeline.*.propertyValues' => ['nullable', 'array'],
+            'timeline.*.footages' => ['nullable', 'array'],
         ]);
 
-         // Handle file upload
+        // Handle file upload
         //  if ($request->hasFile('file')) {
         //     $file = $request->file('file');
         //     $fileName = time() . '_' . $file->getClientOriginalName();
@@ -62,18 +61,38 @@ class VideoController extends Controller
         ]);
 
         $rows = collect($validated['timeline'])
-            ->map(function ($item) {
+            ->map(function ($item) use ($video) {
                 return [
+                    'video_id' => $video->id,
                     'template_id' => $item['templateId'],
                     'start' => $item['start'],
                     'duration' => $item['duration'],
                     'properties' => $item['propertyValues'] ?? [],
+                    'footages' => $item['footages'] ?? [],
                 ];
             })->all();
 
+
+        // return $rows;
+
+
         if (!empty($rows)) {
             // Use relationship so casts handle JSON encoding
-            $video->templates()->createMany($rows);
+            // $video->templates()->createMany($rows);
+
+            foreach ($rows as $row) {
+                $videoTemplate = VideoTemplate::create($row);
+                foreach ($row['footages'] as $key => $footage) {
+                    VideoTemplateFootage::create([
+                        'video_id' => $video->id,
+                        'video_template_id' => $videoTemplate->id,
+                        'serial_number' => $key,
+                        'keyword' => $footage['keyword']
+                    ]);
+                }
+
+                // $video->templates()->add($videoTemplate);
+            }
         }
 
         return redirect()->route('video.index')->with('success', 'Video created');
@@ -84,7 +103,10 @@ class VideoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $video = Video::with('templates.footages')->firstWhere('id', $id);
+        $footages = $video->templates->flatMap->footages;
+
+        return $footages;
     }
 
     /**

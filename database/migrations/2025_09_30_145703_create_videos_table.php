@@ -14,8 +14,17 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_path')->nullable();
             $table->string('folder')->nullable();
-            $table->enum('status',['list','run','done'])->default('list');
+            $table->integer('duration')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('video_qulity')->nullable();
+            $table->float('size')->nullable();
+            $table->string('width')->nullable();
+            $table->string('height')->nullable();
+            $table->enum('povider',['all','pixabay','storyblocks','freepik'])->default('all');
+            $table->integer('povider_id')->nullable();
             $table->timestamps();
         });
     }
