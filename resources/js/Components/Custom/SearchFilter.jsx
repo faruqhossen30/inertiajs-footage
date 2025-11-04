@@ -20,6 +20,7 @@ function SearchFilter({routeName}) {
                             }
                         )
                     }}
+                    
                     type="text" name="search" className="py-2 block w-full dark:bg-transparent border-gray-200 dark:border-gray-700 rounded-lg text-sm border-none focus:ring-0" placeholder="Search" />
             </div>
 

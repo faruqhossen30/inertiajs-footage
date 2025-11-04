@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/Components/button';
 
-export default function Create() {
+export default function PizabayVideos() {
     const params = route().params;
     const { data, setData, post, processing, errors, reset } = useForm({
         videos: [],
@@ -14,8 +14,8 @@ export default function Create() {
     function submit(e) {
         e.preventDefault()
         console.log(data);
-        
-        // post(route('category.store'));
+
+        post(route('video.pixabay.store'));
     }
 
     const items = [
@@ -311,7 +311,7 @@ export default function Create() {
         <form onSubmit={submit}>
             <div className="flex items-center gap-2 mb-3">
                 <Button size="sm"
-                    onClick={() => setData('videos', items.map(i => ({ id: i.id, thumbnail: i.videos.medium?.thumbnail, url: i.videos.medium?.url })))}
+                    onClick={() => setData('videos', items.map(i => ({ id: i.id, thumbnail: i.videos.medium?.thumbnail, url: i.videos.medium?.url, tags: i.tags})))}
                     disabled={items.length > 0 && data.videos.length === items.length}
                 >Select All</Button>
                 <Button size="sm" variant="secondary"
@@ -338,7 +338,7 @@ export default function Create() {
                                     if (checked) {
                                         // Add selected item (id, previewURL) without duplicates
                                         if (!data.videos.some(v => v.id === item.id)) {
-                                            setData('videos', [...data.videos, { id: item.id, thumbnail: item.videos.medium?.thumbnail,url:item.videos.medium?.url }]);
+                                            setData('videos', [...data.videos, { id: item.id, thumbnail: item.videos.medium?.thumbnail, url: item.videos.medium?.url,tags: i.tags }]);
                                         }
                                     } else {
                                         // Remove item when unchecked
