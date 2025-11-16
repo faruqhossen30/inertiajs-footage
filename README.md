@@ -1,66 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+- Ensure the jobs table exists and storage symlink is created:
+  - php artisan migrate
+  - php artisan storage:link
+- Configure .env for background workers:
+  - QUEUE_CONNECTION=database
+- Enqueue all pending videos (where status = list ):
+  - php artisan videos:enqueue
+- Start the worker (single process ensures one-by-one execution):
+  - php artisan queue:work --queue=video-downloads --sleep=1 --tries=3
+Optional Usage
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- Enqueue a single video from code:
+  - \App\Jobs\DownloadVideo::dispatch($video->id);
+- Downloaded file URL (if you need to serve it):
+  - Storage::disk('public')->url($video->file_path)
+Notes
 
-## About Laravel
+- The Video table already uses status enum ['list','run','done'] , matching your requested states.
+- If two videos point to the same remote file name, they’ll save under the same name; if you need unique names per video, we can append video_{id} to the basename.
+- Large file downloads are streamed to avoid memory pressure; network errors will revert status to list for later retry.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Update Added
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Service DownloadService now includes downloadThumbnail(Video $video) which streams the image to storage/app/public/thumbnails/... and returns the relative path.
+- Job DownloadVideo now:
+  - Downloads the main video and sets file_path .
+  - If video.thumbnail is a remote URL ( http/https ), downloads it and updates thumbnail with the local relative path.
+  - Keeps the status flow: run at start, done after updates; logs a warning if thumbnail download fails but does not fail the whole job.
+How To Use
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Ensure storage:link is created: php artisan storage:link .
+- With QUEUE_CONNECTION=database , enqueue and run as before:
+  - php artisan videos:enqueue
+  - php artisan queue:work --queue=video-downloads --sleep=1 --tries=3
+Serving Files
 
-## Learning Laravel
+- Video URL: Storage::disk('public')->url($video->file_path)
+- Thumbnail URL: Storage::disk('public')->url($video->thumbnail)
+If you prefer unique filenames per video to avoid collisions across same provider names, I can update both downloaders to
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Queue worker
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Ensure the worker is running to process downloads:
+  - php artisan queue:work --queue=video-downloads
+Optional tweaks
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- If you’d like a separate card for “Enqueue only provider X” or “Enqueue a specific video id,” I can add route variants and card props to target those filters.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- macOs `sudo ln -s /Volumes/Files/server "/Volumes/Files/project/laravel/inertiajs-footage/public"`

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\VideoProvider;
+use App\Enums\VideoStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +29,15 @@ class Video extends Model
         'status'
 
     ];
+
+    protected function casts(): array
+    {
+        return [
+            // Note: column name is 'povider' in schema; cast accordingly
+            'povider' => VideoProvider::class,
+            'status' => VideoStatus::class,
+        ];
+    }
 
     public function tags(): BelongsToMany
     {

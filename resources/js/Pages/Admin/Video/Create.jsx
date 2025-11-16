@@ -69,153 +69,6 @@ export default function Create() {
             "userURL": "https://pixabay.com/users/26211945/"
         },
         {
-            "id": 244839,
-            "pageURL": "https://pixabay.com/videos/id-244839/",
-            "type": "film",
-            "tags": "waves, lake, darkness, water, nature",
-            "duration": 46,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_large.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 143228817,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_medium.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 59361090,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_small.mp4",
-                    "width": 960,
-                    "height": 540,
-                    "size": 37125508,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_tiny.mp4",
-                    "width": 640,
-                    "height": 360,
-                    "size": 20170959,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_tiny.jpg"
-                }
-            },
-            "views": 67122,
-            "downloads": 46790,
-            "likes": 655,
-            "comments": 46,
-            "user_id": 10327513,
-            "user": "NickyPe",
-            "userImageURL": "https://cdn.pixabay.com/user/2024/02/05/16-05-14-742_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/10327513/"
-        },
-        {
-            "id": 160767,
-            "pageURL": "https://pixabay.com/videos/id-160767/",
-            "type": "film",
-            "tags": "ocean, beach, waves, breaking waves, drone, urban, european architecture, europe, coastal nature, nature, portugal, aerial",
-            "duration": 10,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_large.mp4",
-                    "width": 3840,
-                    "height": 2160,
-                    "size": 33882718,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_medium.mp4",
-                    "width": 2560,
-                    "height": 1440,
-                    "size": 18382295,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_small.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 7674361,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_tiny.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 3810101,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_tiny.jpg"
-                }
-            },
-            "views": 273123,
-            "downloads": 108783,
-            "likes": 1562,
-            "comments": 135,
-            "user_id": 35842619,
-            "user": "CREY_zz",
-            "userImageURL": "https://cdn.pixabay.com/user/2023/04/28/00-49-28-230_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/35842619/"
-        },
-        {
-            "id": 206294,
-            "pageURL": "https://pixabay.com/videos/id-206294/",
-            "type": "film",
-            "tags": "horses, animals, wildlife, running, ice, nature",
-            "duration": 15,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_large.mp4",
-                    "width": 1080,
-                    "height": 1920,
-                    "size": 9267237,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_medium.mp4",
-                    "width": 720,
-                    "height": 1280,
-                    "size": 4300650,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_small.mp4",
-                    "width": 540,
-                    "height": 960,
-                    "size": 2823912,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_tiny.mp4",
-                    "width": 360,
-                    "height": 640,
-                    "size": 1509017,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_tiny.jpg"
-                }
-            },
-            "views": 349007,
-            "downloads": 173510,
-            "likes": 1771,
-            "comments": 353,
-            "user_id": 41909299,
-            "user": "Shravan1991",
-            "userImageURL": "https://cdn.pixabay.com/user/2024/03/27/08-57-39-717_250x250.jpg",
-            "noAiTraining": true,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/41909299/"
-        },
-        {
             "id": 169471,
             "pageURL": "https://pixabay.com/videos/id-169471/",
             "type": "film",
@@ -354,8 +207,10 @@ export default function Create() {
                             <div className="focus:outline-none">
                                 {/* Ensure overlay doesn't block interactions like checkbox clicks */}
                                 <span aria-hidden="true" className="absolute inset-0 pointer-events-none" />
-                                <p className="text-sm font-medium text-gray-900">sdfsdf</p>
-                                <p className="truncate text-sm text-gray-500">sdf</p>
+                                <p className="text-sm font-medium text-gray-900">{item.tags}</p>
+                                <div>
+                                    <span>Duration: {item.duration}s</span>
+                                </div>
                             </div>
                         </div>
                     </div>

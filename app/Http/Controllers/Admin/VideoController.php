@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\DownloadVideo;
 use App\Models\Template;
 use App\Models\Video;
+use App\Models\Tag;
 use App\Models\VideoTemplate;
 use App\Models\VideoTemplateFootage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
@@ -49,31 +53,80 @@ class VideoController extends Controller
             'q' => $search,
             'order'=> 'popular',
             'page'=> 1,
-            'per_page'=> 5,
+            'per_page'=> $show ?? 10,
         ];
 
-        // $queryParams =  http_build_query($params);
-        // $url = "https://pixabay.com/api/videos/?{$queryParams}";
-        // $response = Http::get($url);
-        // $data = $response->json();
+        $queryParams =  http_build_query($params);
+        $url = "https://pixabay.com/api/videos/?{$queryParams}";
+        $response = Http::get($url);
+        $data = $response->json();
+
         // return $data['hits'];
 
 
 
-        return Inertia::render('Admin/Video/PixabayVideos', ['data' => []]);
+        return Inertia::render('Admin/Video/PixabayVideos', ['items' => $data['hits']]);
     }
 
     public function pixabayStore(Request $request)
     {
+        $provider = 'pixabay';
         $videos = $request->videos;
 
         foreach ($videos as $video) {
-            Video::create([
-                'povider'=> 'pixabay',
-                'povider_id' => $video['id'],
-                'file_name' => $video['url'],
-                'thumbnail' => $video['thumbnail'],
-            ]);
+            $keywords = array_filter(array_unique(array_map(function ($t) {
+                return trim($t);
+            }, explode(',', $video['tags']))));
+
+            // Find existing video by provider and provider_id; create if not found
+            $targetVideo = Video::where('povider', $provider)
+                ->where('povider_id', $video['id'])
+                ->first();
+
+            if (!$targetVideo) {
+                $targetVideo = Video::create([
+                    'povider'=> $provider,
+                    'povider_id' => $video['id'],
+                    'file_name' => $video['url'],
+                    'thumbnail' => $video['thumbnail'],
+                    'width' => $video['width'],
+                    'height' => $video['height'],
+                    'size' => $video['size'] ?? null,
+                    'duration' => $video['duration'] ?? null
+                ]);
+            }
+
+            $tagIds = [];
+            foreach ($keywords as $name) {
+                if ($name === '') {
+                    continue;
+                }
+
+                $existingByName = Tag::where('name', $name)->first();
+                if ($existingByName) {
+                    $tagIds[] = $existingByName->id;
+                    continue;
+                }
+
+                $baseSlug = Str::slug($name);
+                $slug = $baseSlug;
+                $i = 1;
+                while (Tag::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug.'-'.$i;
+                    $i++;
+                }
+
+                $tag = Tag::create([
+                    'name' => $name,
+                    'slug' => $slug,
+                    'status' => true,
+                ]);
+                $tagIds[] = $tag->id;
+            }
+
+            if (!empty($tagIds)) {
+                $targetVideo->tags()->syncWithoutDetaching($tagIds);
+            }
         }
 
         return "store";
@@ -82,6 +135,30 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         
+    }
+
+    /**
+     * Enqueue pending video downloads to queue and return a JSON response.
+     */
+    public function enqueueDownloads(Request $request)
+    {
+        $videos = Video::query()
+            ->where('status', 'list')
+            ->orderBy('id')
+            ->get();
+
+        if ($videos->isEmpty()) {
+            return back()->with('success', 'No pending videos to enqueue.');
+        }
+
+        $jobs = [];
+        foreach ($videos as $video) {
+            $jobs[] = new DownloadVideo($video->id);
+        }
+
+        Bus::chain($jobs)->dispatch();
+
+        return back()->with('success', 'Enqueued ' . count($jobs) . ' video downloads.');
     }
 
 
@@ -93,56 +170,6 @@ class VideoController extends Controller
     {
         Video::where('id', $id)->delete();
         return redirect()->route('video.index');
-
-
-
-        $show = null;
-        if (isset($_GET['show']) && $_GET['show']) {
-            $show = $_GET['show'];
-        }
-
-        $products = Product::query();
-
-        if (isset($_GET['district']) && $_GET['district']) {
-            $district = $_GET['district'];
-            // $products = $products->where('district_id', $district);
-            return $district;
-        }
-
-        if (isset($_GET['cat']) && $_GET['cat']) {
-            $cat = $_GET['cat'];
-            $products = $products->whereIn('category_id', $cat);
-        }
-        if (isset($_GET['brand']) && $_GET['brand']) {
-            $brands = $_GET['brand'];
-            $products = $products->whereIn('brand_id', $brands);
-        }
-
-        if (isset($_GET['feature']) && $_GET['feature']) {
-            $feature = $_GET['feature'];
-            $products = $products->whereHas('features', function ($query) use ($feature) {
-                return $query->whereIn('feature_id', $feature);
-            });
-        }
-
-        if (isset($_GET['search']) && $_GET['search']) {
-            $search = $_GET['search'];
-            $products = $products->where('title', 'like', '%' . $search . '%');
-        }
-
-        if (isset($_GET['orderby']) && $_GET['orderby']) {
-            $orderby = $_GET['orderby'];
-            $products = $products->orderBy('created_at', $orderby);
-        }
-
-
-        if (isset($_GET['sort']) && $_GET['sort']) {
-            $sort = $_GET['sort'];
-            $products = $products->orderBy('price', $sort);
-        }
-
-        $products = $products->latest()->paginate($show ?? 10)->appends($_GET);
-        $brands = Brand::get();
 
     }
 }

@@ -1,9 +1,88 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react';
+import { MagnifyingGlassIcon, PlayIcon, ArrowDownTrayIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { BoltIcon, FireIcon, StarIcon } from '@heroicons/react/24/solid';
+import Modal from '@/Components/Modal';
+import VideoCard from '@/Components/HomePage/VideoCard';
+import HeroSection from '@/Components/HomePage/HeroSection';
+import CategorySection from '@/Components/HomePage/CategorySection';
+import Pagination from '@/Components/Pagination';
 
-const HomePage = () => {
+
+const HomePage = ({ videos }) => {
+
+
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [loading, setLoading] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(null);
+
+  const handlePlay = (video) => {
+    setCurrentVideo(video);
+    setShowPlayer(true);
+  };
+
+      // Simple time format helper
+      const formatDuration = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
   return (
-    <div>HomePage</div>
-  )
-}
+    <div className="min-h-screen bg-gray-50 dark:bg-black">     
+      <HeroSection />
 
-export default HomePage
+      <CategorySection />
+      {/* Grid */}
+      <section className="container mx-auto py-8">
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-900">
+                <div className="aspect-video rounded-lg bg-gray-200 dark:bg-gray-700" />
+                <div className="mt-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {videos.data.map((video) => (
+              <VideoCard key={video.id} video={video} onPlay={handlePlay} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <div className="container mx-auto pb-10">
+        <Pagination pagination={videos} links={videos.links} />
+      </div>
+
+      {/* Player Modal */}
+      <Modal show={showPlayer} maxWidth="xl" onClose={() => setShowPlayer(false)}>
+        {currentVideo && (
+          <div className="bg-black">
+            <video src={window.location.origin + '/server/' + currentVideo.file_path} controls autoPlay className="w-full" poster={currentVideo.thumbnail} />
+            <div className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{currentVideo.title}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {formatDuration(currentVideo.duration)} • {currentVideo.width}×{currentVideo.height} • {currentVideo.provider}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+                    <ArrowDownTrayIcon className="h-4 w-4" />
+                    Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
+};
+
+export default HomePage;

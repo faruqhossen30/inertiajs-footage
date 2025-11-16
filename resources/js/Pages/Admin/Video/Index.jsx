@@ -9,12 +9,6 @@ import Pagination from '@/Components/Pagination';
 import { Badge } from '@/Components/badge';
 
 export default function Index({ videos }) {
-    const handleDelete = (id) => {
-        if (confirm('Delete this video?')) {
-            router.delete(route('video.destroy', id));
-        }
-    };
-
     return (
         <AuthenticatedLayout>
             <Head title="Videos" />
@@ -40,7 +34,7 @@ export default function Index({ videos }) {
                                 </TableCell>                                
 
                                 <TableCell>
-                                    <img src={item.thumbnail} alt="" className="w-6 h-6 rounded-sm" />
+                                    <img src={window.location.origin + '/server/' + item.thumbnail} alt="" className="h-10 rounded-sm" />
                                 </TableCell>
                                 <TableCell className="font-medium">
                                     <Badge className="capitalize">{item.status}</Badge>
@@ -61,6 +55,9 @@ export default function Index({ videos }) {
                         ))}
                     </TableBody>
                 </Table>
+            </div>
+            <div className='py-5'>
+                <Pagination pagination={videos} links={videos.links} />
             </div>
         </AuthenticatedLayout>
     );

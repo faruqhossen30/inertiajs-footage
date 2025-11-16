@@ -30,6 +30,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('video', [VideoController::class, 'index'])->name('video.index');
     Route::get('video/create', [VideoController::class, 'create'])->name('video.create');
     Route::post('video', [VideoController::class, 'pixabayStore'])->name('video.pixabay.store');
+    Route::post('video/enqueue', [VideoController::class, 'enqueueDownloads'])->name('video.enqueue');
 
 
 

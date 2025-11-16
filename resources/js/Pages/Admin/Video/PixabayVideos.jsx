@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/Components/button';
 
-export default function PizabayVideos() {
+export default function PizabayVideos({ items = [] }) {
     const params = route().params;
     const { data, setData, post, processing, errors, reset } = useForm({
         videos: [],
@@ -18,257 +18,10 @@ export default function PizabayVideos() {
         post(route('video.pixabay.store'));
     }
 
-    const items = [
-        {
-            "id": 111204,
-            "pageURL": "https://pixabay.com/videos/id-111204/",
-            "type": "film",
-            "tags": "sunset, nature, sky, dubai",
-            "duration": 16,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_large.mp4",
-                    "width": 2560,
-                    "height": 1440,
-                    "size": 12476352,
-                    "thumbnail": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_medium.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 7075994,
-                    "thumbnail": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_small.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 3306271,
-                    "thumbnail": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_tiny.mp4",
-                    "width": 960,
-                    "height": 540,
-                    "size": 1930186,
-                    "thumbnail": "https://cdn.pixabay.com/video/2022/03/18/111204-689949818_tiny.jpg"
-                }
-            },
-            "views": 393500,
-            "downloads": 169158,
-            "likes": 1518,
-            "comments": 237,
-            "user_id": 26211945,
-            "user": "MUHAMMADSAQIB107",
-            "userImageURL": "https://cdn.pixabay.com/user/2022/03/18/21-25-03-546_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/26211945/"
-        },
-        {
-            "id": 244839,
-            "pageURL": "https://pixabay.com/videos/id-244839/",
-            "type": "film",
-            "tags": "waves, lake, darkness, water, nature",
-            "duration": 46,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_large.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 143228817,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_medium.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 59361090,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_small.mp4",
-                    "width": 960,
-                    "height": 540,
-                    "size": 37125508,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2024/12/04/244839_tiny.mp4",
-                    "width": 640,
-                    "height": 360,
-                    "size": 20170959,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/12/04/244839_tiny.jpg"
-                }
-            },
-            "views": 67122,
-            "downloads": 46790,
-            "likes": 655,
-            "comments": 46,
-            "user_id": 10327513,
-            "user": "NickyPe",
-            "userImageURL": "https://cdn.pixabay.com/user/2024/02/05/16-05-14-742_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/10327513/"
-        },
-        {
-            "id": 160767,
-            "pageURL": "https://pixabay.com/videos/id-160767/",
-            "type": "film",
-            "tags": "ocean, beach, waves, breaking waves, drone, urban, european architecture, europe, coastal nature, nature, portugal, aerial",
-            "duration": 10,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_large.mp4",
-                    "width": 3840,
-                    "height": 2160,
-                    "size": 33882718,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_medium.mp4",
-                    "width": 2560,
-                    "height": 1440,
-                    "size": 18382295,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_small.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 7674361,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_tiny.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 3810101,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/04/28/160767-822213540_tiny.jpg"
-                }
-            },
-            "views": 273123,
-            "downloads": 108783,
-            "likes": 1562,
-            "comments": 135,
-            "user_id": 35842619,
-            "user": "CREY_zz",
-            "userImageURL": "https://cdn.pixabay.com/user/2023/04/28/00-49-28-230_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/35842619/"
-        },
-        {
-            "id": 206294,
-            "pageURL": "https://pixabay.com/videos/id-206294/",
-            "type": "film",
-            "tags": "horses, animals, wildlife, running, ice, nature",
-            "duration": 15,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_large.mp4",
-                    "width": 1080,
-                    "height": 1920,
-                    "size": 9267237,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_medium.mp4",
-                    "width": 720,
-                    "height": 1280,
-                    "size": 4300650,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_small.mp4",
-                    "width": 540,
-                    "height": 960,
-                    "size": 2823912,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2024/03/31/206294_tiny.mp4",
-                    "width": 360,
-                    "height": 640,
-                    "size": 1509017,
-                    "thumbnail": "https://cdn.pixabay.com/video/2024/03/31/206294_tiny.jpg"
-                }
-            },
-            "views": 349007,
-            "downloads": 173510,
-            "likes": 1771,
-            "comments": 353,
-            "user_id": 41909299,
-            "user": "Shravan1991",
-            "userImageURL": "https://cdn.pixabay.com/user/2024/03/27/08-57-39-717_250x250.jpg",
-            "noAiTraining": true,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/41909299/"
-        },
-        {
-            "id": 169471,
-            "pageURL": "https://pixabay.com/videos/id-169471/",
-            "type": "film",
-            "tags": "snail, mollusk, creeping animal, nature",
-            "duration": 40,
-            "videos": {
-                "large": {
-                    "url": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_large.mp4",
-                    "width": 3840,
-                    "height": 2160,
-                    "size": 84235507,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_large.jpg"
-                },
-                "medium": {
-                    "url": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_medium.mp4",
-                    "width": 2560,
-                    "height": 1440,
-                    "size": 34257266,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_medium.jpg"
-                },
-                "small": {
-                    "url": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_small.mp4",
-                    "width": 1920,
-                    "height": 1080,
-                    "size": 20546863,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_small.jpg"
-                },
-                "tiny": {
-                    "url": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_tiny.mp4",
-                    "width": 1280,
-                    "height": 720,
-                    "size": 9373320,
-                    "thumbnail": "https://cdn.pixabay.com/video/2023/06/30/169471-841382876_tiny.jpg"
-                }
-            },
-            "views": 199855,
-            "downloads": 78526,
-            "likes": 1060,
-            "comments": 170,
-            "user_id": 4994132,
-            "user": "adege",
-            "userImageURL": "https://cdn.pixabay.com/user/2022/04/26/15-17-47-992_250x250.jpg",
-            "noAiTraining": false,
-            "isAiGenerated": false,
-            "isGRated": true,
-            "isLowQuality": false,
-            "userURL": "https://pixabay.com/users/4994132/"
-        }
-    ];
 
     return <AuthenticatedLayout>
         <div className="flex items-center justify-between py-3 space-x-5">
-            <div className="flex items-center flex-1  px-3 border dark:border-gray-700 rounded-md">
+            <div className="flex items-center flex-1  px-3 border bg-white dark:border-gray-700 rounded-md">
                 <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
                 <input
                     onChange={(e) => {
@@ -285,7 +38,7 @@ export default function PizabayVideos() {
                     defaultValue={params.search && params.search}
                     type="text" name="search" className="py-2 block w-full dark:bg-transparent border-gray-200 dark:border-gray-700 rounded-lg text-sm border-none focus:ring-0" placeholder="Search" />
             </div>
-            <div className="space-y-3">
+            <div className="space-x-5 flex items-center">
                 <select name="show"
                     onChange={(e) => {
                         return router.get(route('video.create', params),
@@ -305,13 +58,47 @@ export default function PizabayVideos() {
                     <option value="freepik">Freepik</option>
                     <option value="storyblocks">Story Blocks</option>
                 </select>
+                <select name="show"
+                    onChange={(e) => {
+                        return router.get(route('video.create', params),
+                            {
+                                show: e.target.value
+                            },
+                            {
+                                preserveState: true,
+                                replace: true
+                            }
+                        )
+                    }}
+                    className="py-2 px-3 pe-9 block border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
             </div>
         </div>
+
+        {processing && <div>
+            <p>processing</p>
+        </div>}
 
         <form onSubmit={submit}>
             <div className="flex items-center gap-2 mb-3">
                 <Button size="sm"
-                    onClick={() => setData('videos', items.map(i => ({ id: i.id, thumbnail: i.videos.medium?.thumbnail, url: i.videos.medium?.url, tags: i.tags})))}
+                    onClick={() => setData('videos', items.map(i => (
+                        {
+                            id: i.id,
+                            thumbnail: i.videos.medium?.thumbnail,
+                            url: i.videos.medium?.url,
+                            tags: i.tags,
+                            width: i.videos.medium?.width,
+                            height: i.videos.medium?.height,
+                            size: i.videos.medium?.size,
+                            duration: i.duration
+                        }
+                    )))}
                     disabled={items.length > 0 && data.videos.length === items.length}
                 >Select All</Button>
                 <Button size="sm" variant="secondary"
@@ -323,7 +110,7 @@ export default function PizabayVideos() {
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className="relative flex items-center space-x-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-5 shadow-sm  hover:border-gray-400"
+                        className="relative flex items-center space-x-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 shadow-sm  hover:border-gray-400"
                     >
                         <div className="flex h-6 items-center">
                             <input
@@ -332,37 +119,54 @@ export default function PizabayVideos() {
                                 type="checkbox"
                                 aria-describedby="links-description"
                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                checked={data.videos.some(v => v.id === item.id)}
+                                checked={data.videos.some(i => i.id === item.id)}
                                 onChange={(e) => {
                                     const { checked } = e.target;
                                     if (checked) {
                                         // Add selected item (id, previewURL) without duplicates
-                                        if (!data.videos.some(v => v.id === item.id)) {
-                                            setData('videos', [...data.videos, { id: item.id, thumbnail: item.videos.medium?.thumbnail, url: item.videos.medium?.url,tags: i.tags }]);
+                                        if (!data.videos.some(i => i.id === item.id)) {
+                                            setData('videos', [...data.videos,
+                                            {
+                                                id: item.id,
+                                                thumbnail: item.videos.medium?.thumbnail,
+                                                url: item.videos.medium?.url,
+                                                tags: item.tags,
+                                                width: item.videos.medium?.width,
+                                                height: item.videos.medium?.height,
+                                                size: item.videos.medium?.size,
+                                                duration: item.duration
+                                            }
+                                            ]);
                                         }
                                     } else {
                                         // Remove item when unchecked
-                                        setData('videos', data.videos.filter(v => v.id !== item.id));
+                                        setData('videos', data.videos.filter(i => i.id !== item.id));
                                     }
                                 }}
                             />
                         </div>
                         <div className="flex-shrink-0">
-                            <img alt="" src={item.videos.medium?.thumbnail} className="h-10 w-10 rounded-md" />
+                            <img alt="" src={item.videos.medium?.thumbnail} className="h-16 rounded-md" />
                         </div>
                         <div className="min-w-0 flex-1">
                             <div className="focus:outline-none">
                                 {/* Ensure overlay doesn't block interactions like checkbox clicks */}
                                 <span aria-hidden="true" className="absolute inset-0 pointer-events-none" />
-                                <p className="text-sm font-medium text-gray-900">sdfsdf</p>
-                                <p className="truncate text-sm text-gray-500">sdf</p>
+                                <p className="text-sm font-medium text-gray-800 dark:text-gray-400">Tags : {item.tags}</p>
+                                <div className="truncate text-sm text-gray-800 dark:text-gray-400">
+                                    <span>Duration: {item.duration}s </span>
+                                    <span>Size: {(item.videos.medium?.size / 1024 / 1024).toFixed(2)} MB </span>
+                                    <span>Width x Height: {item.videos.medium?.width} x {item.videos.medium?.height} </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 ))}
 
             </div>
-            <Button type="submit" >Save</Button>
+            <div className="py-5">
+                <Button type="submit" >Save</Button>
+            </div>
         </form>
 
     </AuthenticatedLayout>
