@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class HomePageController extends Controller
@@ -18,7 +19,7 @@ class HomePageController extends Controller
 
         $search = null;
         if (isset($_GET['search']) && $_GET['search']) {
-            $search = $_GET['search'];
+            $search = trim($_GET['search']);
         }
 
         $provider = null;
@@ -26,22 +27,22 @@ class HomePageController extends Controller
             $provider = $_GET['provider'];
         }
 
-        $videos = Video::with('tags')
-            ->where('status', 'done')
-            ->latest('id')
-            ->when($search, function ($query) use ($search) {
-                $query->whereHas('tags', function ($tagsQuery) use ($search) {
-                    $tagsQuery->where('name', 'like', '%' . $search . '%');
-                });
-            })
-            ->paginate(16);
-
-        // Attach accessible file URLs for frontend playback
-        $videos->getCollection()->transform(function ($video) {
-            $video->file_url = $video->file_path ? Storage::url($video->file_path) : null;
-            return $video;
-        });
-
+        $videos = Video::select('videos.*')
+        ->leftJoin('tag_video', 'tag_video.video_id', 'videos.id')
+        ->leftJoin('tags', 'tags.id', 'tag_video.tag_id')
+        ->where('videos.status', 'done')
+        ->when($search, function ($query) use ($search) {
+            $terms = array_filter(explode(' ', $search));
+    
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->orWhere('tags.name', 'like', "%{$term}%");
+                }
+            });
+        })
+        ->when($provider, fn($q) => $q->where('videos.provider', $provider))
+        ->paginate(10)->appends(request()->query());
+    
         return Inertia::render('HomePage', ['videos' => $videos]);
     }
 }

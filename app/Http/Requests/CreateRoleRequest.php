@@ -23,15 +23,13 @@ class CreateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:' . Role::class],
+            'name' => ['required', 'string', 'max:255', 'unique:'.Role::class],
             'permissionIds' => ['required', 'array'],
         ];
     }
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -39,4 +37,4 @@ class CreateRoleRequest extends FormRequest
             'permissionIds.required' => 'Please select at least one permission.',
         ];
     }
-} 
+}

@@ -35,11 +35,11 @@ class TemplatePropertyRequest extends FormRequest
                 'regex:/^[a-zA-Z0-9_-]+$/',
                 Rule::unique('template_properties', 'key')
                     ->where('template_id', $templateId)
-                    ->ignore($templatePropertyId)
+                    ->ignore($templatePropertyId),
             ],
             'value' => 'nullable|string',
             'type' => 'required|exists:property_types,slug',
-            'sort_order' => 'integer|min:0'
+            'sort_order' => 'integer|min:0',
         ];
     }
 
@@ -52,7 +52,7 @@ class TemplatePropertyRequest extends FormRequest
             'key.regex' => 'The key may only contain letters, numbers, hyphens, and underscores.',
             'key.unique' => 'This key already exists for the selected template.',
             'type.exists' => 'The selected property type does not exist.',
-            'template_id.exists' => 'The selected template does not exist.'
+            'template_id.exists' => 'The selected template does not exist.',
         ];
     }
 
@@ -65,8 +65,8 @@ class TemplatePropertyRequest extends FormRequest
             // Validate value based on property type
             if ($this->has('type') && $this->has('value')) {
                 $propertyType = PropertyType::where('slug', $this->type)->first();
-                
-                if ($propertyType && !$propertyType->validateValue($this->value)) {
+
+                if ($propertyType && ! $propertyType->validateValue($this->value)) {
                     $validator->errors()->add(
                         'value',
                         "The value is not valid for the selected property type '{$propertyType->name}'."

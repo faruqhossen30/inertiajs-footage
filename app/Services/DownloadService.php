@@ -5,14 +5,13 @@ namespace App\Services;
 use App\Models\Video;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 class DownloadService
 {
     public function downloadImage()
     {
-        return "this is image link";
+        return 'this is image link';
     }
 
     /**
@@ -25,32 +24,32 @@ class DownloadService
             throw new RuntimeException('Video file_name is empty.');
         }
 
-        $basename = basename(parse_url($url, PHP_URL_PATH) ?? '') ?: ('video_' . $video->id . '.mp4');
-        $root = rtrim((string) env('DISK_FILE_LOCATION', ''), '/') . '/videos';
+        $basename = basename(parse_url($url, PHP_URL_PATH) ?? '') ?: ('video_'.$video->id.'.mp4');
+        $root = rtrim((string) env('DISK_FILE_LOCATION', ''), '/').'/videos';
         if ($root === '') {
             // Fallback to public/videos if env not set
             $root = Storage::disk('public')->path('videos');
         }
 
-        if (!is_dir($root)) {
+        if (! is_dir($root)) {
             mkdir($root, 0755, true);
         }
 
         // Stream download to file to avoid loading entire video into memory
         $response = Http::withOptions(['stream' => true])->get($url);
         if ($response->failed()) {
-            throw new RuntimeException('Failed to download video. HTTP status: ' . $response->status());
+            throw new RuntimeException('Failed to download video. HTTP status: '.$response->status());
         }
 
-        $fullPath = $root . '/' . $basename;
+        $fullPath = $root.'/'.$basename;
         $body = $response->toPsrResponse()->getBody();
         $stream = fopen($fullPath, 'w');
-        while (!$body->eof()) {
+        while (! $body->eof()) {
             fwrite($stream, $body->read(1024 * 1024)); // write in 1MB chunks
         }
         fclose($stream);
 
-        return "videos/" . $basename;
+        return 'videos/'.$basename;
     }
 
     /**
@@ -63,30 +62,30 @@ class DownloadService
             throw new RuntimeException('Video thumbnail is empty.');
         }
 
-        $basename = basename(parse_url($url, PHP_URL_PATH) ?? '') ?: ('thumb_' . $video->id . '.jpg');
-        $root = rtrim((string) env('DISK_FILE_LOCATION', ''), '/') . '/thumbnails';
+        $basename = basename(parse_url($url, PHP_URL_PATH) ?? '') ?: ('thumb_'.$video->id.'.jpg');
+        $root = rtrim((string) env('DISK_FILE_LOCATION', ''), '/').'/thumbnails';
         if ($root === '') {
             // Fallback to public/thumbnails if env not set
             $root = Storage::disk('public')->path('thumbnails');
         }
 
-        if (!is_dir($root)) {
+        if (! is_dir($root)) {
             mkdir($root, 0755, true);
         }
 
         $response = Http::withOptions(['stream' => true])->get($url);
         if ($response->failed()) {
-            throw new RuntimeException('Failed to download thumbnail. HTTP status: ' . $response->status());
+            throw new RuntimeException('Failed to download thumbnail. HTTP status: '.$response->status());
         }
 
-        $fullPath = $root . '/' . $basename;
+        $fullPath = $root.'/'.$basename;
         $body = $response->toPsrResponse()->getBody();
         $stream = fopen($fullPath, 'w');
-        while (!$body->eof()) {
+        while (! $body->eof()) {
             fwrite($stream, $body->read(1024 * 128)); // 128KB chunks for images
         }
         fclose($stream);
 
-        return "thumbnails/" .$basename;
+        return 'thumbnails/'.$basename;
     }
 }

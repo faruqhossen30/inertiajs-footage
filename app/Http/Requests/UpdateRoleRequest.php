@@ -32,8 +32,6 @@ class UpdateRoleRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -41,4 +39,4 @@ class UpdateRoleRequest extends FormRequest
             'permissionIds.required' => 'Please select at least one permission.',
         ];
     }
-} 
+}

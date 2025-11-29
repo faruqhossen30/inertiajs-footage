@@ -4,15 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\DownloadVideo;
-use App\Models\Template;
-use App\Models\Video;
 use App\Models\Tag;
-use App\Models\VideoTemplate;
-use App\Models\VideoTemplateFootage;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class VideoController extends Controller
@@ -23,6 +20,7 @@ class VideoController extends Controller
     public function index()
     {
         $videos = Video::latest('id')->paginate(10);
+
         return Inertia::render('Admin/Video/Index', ['videos' => $videos]);
     }
 
@@ -51,19 +49,17 @@ class VideoController extends Controller
         $params = [
             'key' => $key,
             'q' => $search,
-            'order'=> 'popular',
-            'page'=> 1,
-            'per_page'=> $show ?? 10,
+            'order' => 'popular',
+            'page' => 1,
+            'per_page' => $show ?? 10,
         ];
 
-        $queryParams =  http_build_query($params);
+        $queryParams = http_build_query($params);
         $url = "https://pixabay.com/api/videos/?{$queryParams}";
         $response = Http::get($url);
         $data = $response->json();
 
         // return $data['hits'];
-
-
 
         return Inertia::render('Admin/Video/PixabayVideos', ['items' => $data['hits']]);
     }
@@ -83,16 +79,16 @@ class VideoController extends Controller
                 ->where('povider_id', $video['id'])
                 ->first();
 
-            if (!$targetVideo) {
+            if (! $targetVideo) {
                 $targetVideo = Video::create([
-                    'povider'=> $provider,
+                    'povider' => $provider,
                     'povider_id' => $video['id'],
                     'file_name' => $video['url'],
                     'thumbnail' => $video['thumbnail'],
                     'width' => $video['width'],
                     'height' => $video['height'],
                     'size' => $video['size'] ?? null,
-                    'duration' => $video['duration'] ?? null
+                    'duration' => $video['duration'] ?? null,
                 ]);
             }
 
@@ -105,6 +101,7 @@ class VideoController extends Controller
                 $existingByName = Tag::where('name', $name)->first();
                 if ($existingByName) {
                     $tagIds[] = $existingByName->id;
+
                     continue;
                 }
 
@@ -124,18 +121,15 @@ class VideoController extends Controller
                 $tagIds[] = $tag->id;
             }
 
-            if (!empty($tagIds)) {
+            if (! empty($tagIds)) {
                 $targetVideo->tags()->syncWithoutDetaching($tagIds);
             }
         }
 
-        return "store";
+        return 'store';
     }
 
-    public function store(Request $request)
-    {
-        
-    }
+    public function store(Request $request) {}
 
     /**
      * Enqueue pending video downloads to queue and return a JSON response.
@@ -158,10 +152,8 @@ class VideoController extends Controller
 
         Bus::chain($jobs)->dispatch();
 
-        return back()->with('success', 'Enqueued ' . count($jobs) . ' video downloads.');
+        return back()->with('success', 'Enqueued '.count($jobs).' video downloads.');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -169,6 +161,7 @@ class VideoController extends Controller
     public function destroy(string $id)
     {
         Video::where('id', $id)->delete();
+
         return redirect()->route('video.index');
 
     }

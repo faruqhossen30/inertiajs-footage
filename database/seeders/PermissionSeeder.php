@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -30,9 +29,6 @@ class PermissionSeeder extends Seeder
             // ['name' => 'role update', 'module_name' => 'role'],
             // ['name' => 'role delete', 'module_name' => 'role'],
             // ['name' => 'role show',   'module_name' => 'role'],
-
-
-
 
             // permission
             ['name' => 'permission list',   'module_name' => 'permission'],
@@ -65,8 +61,6 @@ class PermissionSeeder extends Seeder
             // ['name' => 'socialmedia setting',  'module_name' => 'setting'],
             // ['name' => 'contactsetting',       'module_name' => 'setting'],
 
-
-
         ]);
 
         $web = collect([]);
@@ -81,18 +75,16 @@ class PermissionSeeder extends Seeder
             ]);
         });
 
-
         Permission::insert($web->toArray());
         $r = Role::create([
-            'name'=>'Super Admin'
+            'name' => 'Super Admin',
         ]);
-        $permissions = Permission::pluck('id','id')->all();
+        $permissions = Permission::pluck('id', 'id')->all();
         $r->syncPermissions($permissions);
 
-        $user = User::firstWhere('id',1);
+        $user = User::firstWhere('id', 1);
 
         $user->assignRole(1);
 
     }
-
 }

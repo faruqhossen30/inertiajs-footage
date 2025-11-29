@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
@@ -18,8 +18,9 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::paginate(10);
+
         // return $categories;
-        return Inertia::render('Admin/Category/Index',['categories'=> $categories]);
+        return Inertia::render('Admin/Category/Index', ['categories' => $categories]);
     }
 
     /**
@@ -38,14 +39,14 @@ class CategoryController extends Controller
         // return $request->all();
 
         $request->validate([
-            'name'=>'required'
+            'name' => 'required',
         ]);
 
-        $data=[
-            'name'=> $request->name,
-            'slug'=> Str::slug($request->name),
-            'description'=> $request->description,
-            'user_id'=> Auth::user()->id,
+        $data = [
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'user_id' => Auth::user()->id,
         ];
         if ($request->file('thumbnail')) {
             $file_name = $request->file('thumbnail')->store('category');
@@ -71,7 +72,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::where('id', $id)->first();
-        return Inertia::render('Admin/Category/Edit', ['category'=>$category]);
+
+        return Inertia::render('Admin/Category/Edit', ['category' => $category]);
     }
 
     /**
@@ -80,14 +82,14 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name'=>'required'
+            'name' => 'required',
         ]);
 
         $data = [
-            'name'=> $request->name,
-            'slug'=> Str::slug($request->name),
-            'description'=> $request->description,
-            'user_id'=> Auth::user()->id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'user_id' => Auth::user()->id,
         ];
 
         $skill = Category::firstwhere('id', $id);
@@ -100,8 +102,8 @@ class CategoryController extends Controller
             $data['thumbnail'] = $file_name;
         }
 
-
         Category::firstwhere('id', $id)->update($data);
+
         return to_route('category.index');
     }
 
@@ -111,6 +113,7 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         Category::where('id', $id)->delete();
+
         return redirect()->route('category.index');
     }
 }

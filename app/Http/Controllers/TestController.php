@@ -13,13 +13,12 @@ class TestController extends Controller
     //     $this->downloadService = $downloadService;
     // }
 
-
     public function index(Request $request)
     {
-        $downloadService = new DownloadService();
+        $downloadService = new DownloadService;
+
         return $downloadService->downloadImage();
 
-        
         // return $this->downloadService->downloadImage();
         // return $request->user();
     }

@@ -2,40 +2,29 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ChannelController;
 use App\Http\Controllers\Admin\DashboarController;
-use App\Http\Controllers\Admin\PropertyTypeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\TemplateController;
-use App\Http\Controllers\Admin\TemplatePropertyController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\ApiKeyController;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
-use App\Models\Channel;
-use PHPUnit\Event\Code\Test;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('dashboard', [DashboarController::class, 'index'])->name('dashboard');
-    Route::resource('role',  RoleController::class);
+    Route::resource('role', RoleController::class);
     Route::resource('admin', AdminController::class);
 
     Route::resource('category', CategoryController::class);
     Route::resource('api-key', ApiKeyController::class);
-    
+
     Route::get('video', [VideoController::class, 'index'])->name('video.index');
     Route::get('video/create', [VideoController::class, 'create'])->name('video.create');
     Route::post('video', [VideoController::class, 'pixabayStore'])->name('video.pixabay.store');
     Route::post('video/enqueue', [VideoController::class, 'enqueueDownloads'])->name('video.enqueue');
 
-
-
-
-    Route::resource('role',  RoleController::class);
+    Route::resource('role', RoleController::class);
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -43,4 +32,4 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('test', [TestController::class, 'index']);
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

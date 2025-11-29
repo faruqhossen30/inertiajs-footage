@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ApiKey;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ApiKeySeeder extends Seeder
@@ -17,7 +16,7 @@ class ApiKeySeeder extends Seeder
         ApiKey::create([
             'name' => 'Pixabay',
             'key' => '52396754-670cefac1a5a1c5285473e2fb',
-            'email' => 'faruqhossen30@gmail.com'
+            'email' => 'faruqhossen30@gmail.com',
         ]);
     }
 }

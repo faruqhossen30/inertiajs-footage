@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\PixabayImageService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,7 +28,7 @@ class PixabayController extends Controller
             'orientations' => PixabayImageService::getAvailableOrientations(),
             'colors' => PixabayImageService::getAvailableColors(),
             'isConfigured' => $this->pixabayService->isConfigured(),
-            'rateLimit' => $this->pixabayService->getRateLimitInfo()
+            'rateLimit' => $this->pixabayService->getRateLimitInfo(),
         ]);
     }
 
@@ -40,9 +39,9 @@ class PixabayController extends Controller
     {
         $request->validate([
             'query' => 'nullable|string|max:100',
-            'image_type' => 'nullable|in:' . implode(',', PixabayImageService::getAvailableImageTypes()),
-            'orientation' => 'nullable|in:' . implode(',', PixabayImageService::getAvailableOrientations()),
-            'category' => 'nullable|in:' . implode(',', PixabayImageService::getAvailableCategories()),
+            'image_type' => 'nullable|in:'.implode(',', PixabayImageService::getAvailableImageTypes()),
+            'orientation' => 'nullable|in:'.implode(',', PixabayImageService::getAvailableOrientations()),
+            'category' => 'nullable|in:'.implode(',', PixabayImageService::getAvailableCategories()),
             'colors' => 'nullable|string',
             'min_width' => 'nullable|integer|min:0',
             'min_height' => 'nullable|integer|min:0',
@@ -50,26 +49,26 @@ class PixabayController extends Controller
             'safesearch' => 'nullable|boolean',
             'order' => 'nullable|in:popular,latest',
             'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:3|max:200'
+            'per_page' => 'nullable|integer|min:3|max:200',
         ]);
 
         $params = $request->only([
             'query', 'image_type', 'orientation', 'category', 'colors',
             'min_width', 'min_height', 'editors_choice', 'safesearch',
-            'order', 'page', 'per_page'
+            'order', 'page', 'per_page',
         ]);
 
         // Remove empty values
-        $params = array_filter($params, function($value) {
+        $params = array_filter($params, function ($value) {
             return $value !== null && $value !== '';
         });
 
         $results = $this->pixabayService->searchImages($params);
 
         return response()->json([
-            'success' => !isset($results['error']),
+            'success' => ! isset($results['error']),
             'data' => $results,
-            'rate_limit' => $this->pixabayService->getRateLimitInfo()
+            'rate_limit' => $this->pixabayService->getRateLimitInfo(),
         ]);
     }
 
@@ -80,7 +79,7 @@ class PixabayController extends Controller
     {
         $request->validate([
             'query' => 'required|string|max:100',
-            'filters' => 'nullable|array'
+            'filters' => 'nullable|array',
         ]);
 
         $results = $this->pixabayService->searchByQuery(
@@ -89,9 +88,9 @@ class PixabayController extends Controller
         );
 
         return response()->json([
-            'success' => !isset($results['error']),
+            'success' => ! isset($results['error']),
             'data' => $results,
-            'rate_limit' => $this->pixabayService->getRateLimitInfo()
+            'rate_limit' => $this->pixabayService->getRateLimitInfo(),
         ]);
     }
 
@@ -101,8 +100,8 @@ class PixabayController extends Controller
     public function getByCategory(Request $request): JsonResponse
     {
         $request->validate([
-            'category' => 'required|in:' . implode(',', PixabayImageService::getAvailableCategories()),
-            'per_page' => 'nullable|integer|min:3|max:200'
+            'category' => 'required|in:'.implode(',', PixabayImageService::getAvailableCategories()),
+            'per_page' => 'nullable|integer|min:3|max:200',
         ]);
 
         $results = $this->pixabayService->getImagesByCategory(
@@ -111,9 +110,9 @@ class PixabayController extends Controller
         );
 
         return response()->json([
-            'success' => !isset($results['error']),
+            'success' => ! isset($results['error']),
             'data' => $results,
-            'rate_limit' => $this->pixabayService->getRateLimitInfo()
+            'rate_limit' => $this->pixabayService->getRateLimitInfo(),
         ]);
     }
 
@@ -124,7 +123,7 @@ class PixabayController extends Controller
     {
         $request->validate([
             'query' => 'nullable|string|max:100',
-            'filters' => 'nullable|array'
+            'filters' => 'nullable|array',
         ]);
 
         $results = $this->pixabayService->getHighQualityImages(
@@ -133,9 +132,9 @@ class PixabayController extends Controller
         );
 
         return response()->json([
-            'success' => !isset($results['error']),
+            'success' => ! isset($results['error']),
             'data' => $results,
-            'rate_limit' => $this->pixabayService->getRateLimitInfo()
+            'rate_limit' => $this->pixabayService->getRateLimitInfo(),
         ]);
     }
 
@@ -149,7 +148,7 @@ class PixabayController extends Controller
             'image.id' => 'required|integer',
             'image.largeImageURL' => 'required_without:image.webformatURL|string',
             'image.webformatURL' => 'required_without:image.largeImageURL|string',
-            'disk' => 'nullable|string'
+            'disk' => 'nullable|string',
         ]);
 
         $downloadUrl = $this->pixabayService->downloadImage(
@@ -160,7 +159,7 @@ class PixabayController extends Controller
         return response()->json([
             'success' => $downloadUrl !== null,
             'download_url' => $downloadUrl,
-            'message' => $downloadUrl ? 'Image downloaded successfully' : 'Failed to download image'
+            'message' => $downloadUrl ? 'Image downloaded successfully' : 'Failed to download image',
         ]);
     }
 
@@ -174,7 +173,7 @@ class PixabayController extends Controller
             'images.*.id' => 'required|integer',
             'images.*.largeImageURL' => 'required_without:images.*.webformatURL|string',
             'images.*.webformatURL' => 'required_without:images.*.largeImageURL|string',
-            'disk' => 'nullable|string'
+            'disk' => 'nullable|string',
         ]);
 
         $results = $this->pixabayService->downloadMultipleImages(
@@ -182,7 +181,7 @@ class PixabayController extends Controller
             $request->input('disk', 'public')
         );
 
-        $successCount = collect($results)->filter(function($result) {
+        $successCount = collect($results)->filter(function ($result) {
             return $result['download_url'] !== null;
         })->count();
 
@@ -191,7 +190,7 @@ class PixabayController extends Controller
             'results' => $results,
             'downloaded' => $successCount,
             'total' => count($results),
-            'message' => "Downloaded {$successCount} out of " . count($results) . " images"
+            'message' => "Downloaded {$successCount} out of ".count($results).' images',
         ]);
     }
 
@@ -206,7 +205,7 @@ class PixabayController extends Controller
             'categories' => PixabayImageService::getAvailableCategories(),
             'image_types' => PixabayImageService::getAvailableImageTypes(),
             'orientations' => PixabayImageService::getAvailableOrientations(),
-            'colors' => PixabayImageService::getAvailableColors()
+            'colors' => PixabayImageService::getAvailableColors(),
         ]);
     }
 }

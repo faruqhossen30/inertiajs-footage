@@ -1,10 +1,10 @@
 <?php
 
+use App\Jobs\DownloadVideo;
+use App\Models\Video;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
-use App\Jobs\DownloadVideo;
-use App\Models\Video;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -18,6 +18,7 @@ Artisan::command('videos:enqueue', function () {
 
     if ($videos->isEmpty()) {
         $this->info('No pending videos to enqueue.');
+
         return 0;
     }
 
@@ -28,6 +29,7 @@ Artisan::command('videos:enqueue', function () {
 
     Bus::chain($jobs)->dispatch();
 
-    $this->info('Enqueued ' . count($jobs) . ' video downloads. They will run one-by-one.');
+    $this->info('Enqueued '.count($jobs).' video downloads. They will run one-by-one.');
+
     return 0;
 })->purpose('Enqueue pending video downloads to run sequentially in the background');

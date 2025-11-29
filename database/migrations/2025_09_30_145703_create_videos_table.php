@@ -22,8 +22,8 @@ return new class extends Migration
             $table->float('size')->nullable();
             $table->string('width')->nullable();
             $table->string('height')->nullable();
-            $table->enum('povider',['all','pixabay','storyblocks','freepik'])->default('all');
-            $table->enum('status',['list','run','done'])->default('list');
+            $table->enum('povider', ['all', 'pixabay', 'storyblocks', 'freepik'])->default('all');
+            $table->enum('status', ['list', 'run', 'done'])->default('list');
             $table->integer('povider_id')->nullable();
             $table->timestamps();
         });

@@ -6,8 +6,6 @@ use App\Enums\VideoProvider;
 use App\Enums\VideoStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Video extends Model
 {
@@ -26,7 +24,7 @@ class Video extends Model
         'povider_id',
         'file_name',
         'file_path',
-        'status'
+        'status',
 
     ];
 
@@ -45,5 +43,4 @@ class Video extends Model
             ->using(VideoTag::class)
             ->withTimestamps();
     }
-
 }

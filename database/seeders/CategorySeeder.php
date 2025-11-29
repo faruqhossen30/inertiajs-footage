@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -14,25 +13,25 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name'    => 'Travel',
+                'name' => 'Travel',
                 'user_id' => 1,
-                'status'  => 1,
+                'status' => 1,
             ],
             [
-                'name'    => 'Product',
+                'name' => 'Product',
                 'user_id' => 1,
-                'status'  => 1,
+                'status' => 1,
             ],
             [
-                'name'    => 'Top 10',
+                'name' => 'Top 10',
                 'user_id' => 1,
-                'status'  => 1,
+                'status' => 1,
             ],
             [
-                'name'    => 'Travel',
+                'name' => 'Travel',
                 'user_id' => 1,
-                'status'  => 1,
-            ]
+                'status' => 1,
+            ],
         ];
     }
 }

@@ -12,7 +12,7 @@ class Audio extends Model
         'file_name',
         'file_path',
         'pc',
-        'status'
+        'status',
     ];
 
     public function video(): HasOne

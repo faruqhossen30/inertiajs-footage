@@ -17,8 +17,9 @@ class AdminController extends Controller
     public function index()
     {
         $admins = User::with('roles')->latest()->paginate(10);
+
         // return $admins;
-        return Inertia::render('Admin/Admin/Index', ['admins'=>$admins]);
+        return Inertia::render('Admin/Admin/Index', ['admins' => $admins]);
     }
 
     /**
@@ -27,7 +28,8 @@ class AdminController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return Inertia::render('Admin/Admin/Create', ['roles'=>$roles]);
+
+        return Inertia::render('Admin/Admin/Create', ['roles' => $roles]);
     }
 
     /**
@@ -40,7 +42,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'min:8', 'confirmed'],
             'roleIds' => 'required|array',
-            'roleIds.*' => 'exists:roles,id'
+            'roleIds.*' => 'exists:roles,id',
         ]);
 
         $data = [
@@ -51,7 +53,7 @@ class AdminController extends Controller
 
         $user = User::create($data);
         $user->syncRoles($request->roleIds);
-        
+
         return redirect()->route('admin.index')
             ->with('success', 'Admin successfully created');
     }
@@ -71,7 +73,8 @@ class AdminController extends Controller
     {
         $admin = User::where('id', $id)->first();
         $roles = Role::all();
-        return Inertia::render('Admin/Admin/Edit', ['admin' => $admin ,'roles' => $roles]);
+
+        return Inertia::render('Admin/Admin/Edit', ['admin' => $admin, 'roles' => $roles]);
     }
 
     /**
@@ -81,14 +84,14 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,'.$id,
             'password' => ['nullable', 'min:8', 'confirmed'],
             'role_ids' => 'required|array',
-            'role_ids.*' => 'exists:roles,id'
+            'role_ids.*' => 'exists:roles,id',
         ]);
 
         $admin = User::findOrFail($id);
-        
+
         $updateData = [
             'name' => $request->name,
             'email' => $request->email,
@@ -111,7 +114,7 @@ class AdminController extends Controller
     public function destroy(string $id)
     {
         $admin = User::findOrFail($id);
-        
+
         // Prevent self-deletion
         if ($admin->id === auth()->id()) {
             return redirect()->route('admin.index')
@@ -119,7 +122,7 @@ class AdminController extends Controller
         }
 
         $admin->delete();
-        
+
         return redirect()->route('admin.index')
             ->with('success', 'Admin successfully deleted');
     }

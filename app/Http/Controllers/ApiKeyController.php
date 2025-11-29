@@ -14,8 +14,9 @@ class ApiKeyController extends Controller
     public function index()
     {
         $apiKeys = ApiKey::paginate(10);
+
         // return $categories;
-        return Inertia::render('Admin/ApiKey/Index',['apiKeys'=> $apiKeys]);
+        return Inertia::render('Admin/ApiKey/Index', ['apiKeys' => $apiKeys]);
     }
 
     /**
@@ -32,14 +33,14 @@ class ApiKeyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required',
-            'key'=>'required'
+            'name' => 'required',
+            'key' => 'required',
         ]);
 
-        $data=[
-            'name'=> $request->name,
-            'key'=> $request->key,
-            'email'=> $request->email,
+        $data = [
+            'name' => $request->name,
+            'key' => $request->key,
+            'email' => $request->email,
         ];
 
         ApiKey::create($data);
@@ -61,6 +62,7 @@ class ApiKeyController extends Controller
     public function edit(string $id)
     {
         $apiKey = ApiKey::where('id', $id)->first();
+
         return Inertia::render('Admin/ApiKey/Edit', ['apiKey' => $apiKey]);
     }
 
@@ -70,19 +72,19 @@ class ApiKeyController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name'=>'required',
-            'key'=>'required',
-            'email'=>'required'
+            'name' => 'required',
+            'key' => 'required',
+            'email' => 'required',
         ]);
 
-        $data=[
-            'name'=> $request->name,
-            'key'=> $request->key,
-            'email'=> $request->email,
+        $data = [
+            'name' => $request->name,
+            'key' => $request->key,
+            'email' => $request->email,
         ];
 
         ApiKey::firstwhere('id', $id)->update($data);
-        
+
         return to_route('api-key.index');
     }
 
@@ -92,6 +94,7 @@ class ApiKeyController extends Controller
     public function destroy(string $id)
     {
         ApiKey::where('id', $id)->delete();
-        return redirect()->route('api-key.index');        
+
+        return redirect()->route('api-key.index');
     }
 }

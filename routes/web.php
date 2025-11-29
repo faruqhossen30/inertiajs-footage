@@ -1,15 +1,10 @@
 <?php
 
 use App\Http\Controllers\HomePageController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PixabayController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', [HomePageController::class, 'homePage'])->name('homepage');
-
-
 
 // Pixabay API Routes
 Route::middleware(['auth', 'verified'])->group(function () {

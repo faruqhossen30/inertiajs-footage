@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
@@ -19,12 +18,13 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::with('permissions')->latest()->paginate(10);
+
         return Inertia::render('Admin/Role/Index', [
             'roles' => $roles,
             'flash' => [
                 'success' => Session::get('success'),
                 'error' => Session::get('error'),
-            ]
+            ],
         ]);
     }
 
@@ -34,11 +34,12 @@ class RoleController extends Controller
     public function create()
     {
         $permissions = Permission::all()->groupBy('module_name');
+
         return Inertia::render('Admin/Role/Create', [
             'permissions' => $permissions,
             'flash' => [
                 'error' => Session::get('error'),
-            ]
+            ],
         ]);
     }
 
@@ -52,6 +53,7 @@ class RoleController extends Controller
         $createdRole->syncPermissions($permissions);
 
         Session::flash('success', 'Role successfully created');
+
         return redirect()->route('role.index');
     }
 
@@ -61,11 +63,12 @@ class RoleController extends Controller
     public function show(string $id)
     {
         $role = Role::with('permissions')->findById($id);
+
         return Inertia::render('Admin/Role/Show', [
             'role' => $role,
             'flash' => [
                 'error' => Session::get('error'),
-            ]
+            ],
         ]);
     }
 
@@ -77,13 +80,14 @@ class RoleController extends Controller
         $role = Role::findById($id);
         $rolePermissions = $role->permissions()->pluck('id')->toArray();
         $permissions = Permission::all()->groupBy('module_name');
+
         return Inertia::render('Admin/Role/Edit', [
-            'role' => $role, 
-            'rolePermissions' => $rolePermissions, 
+            'role' => $role,
+            'rolePermissions' => $rolePermissions,
             'permissions' => $permissions,
             'flash' => [
                 'error' => Session::get('error'),
-            ]
+            ],
         ]);
     }
 
@@ -94,8 +98,9 @@ class RoleController extends Controller
     {
         $role->update(['name' => $request->validated('name')]);
         $role->syncPermissions(array_map('intval', $request->validated('permissionIds')));
-        
+
         Session::flash('success', 'Role successfully updated');
+
         return redirect()->route('role.index');
     }
 
@@ -105,16 +110,18 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         $role = Role::findById($id);
-        
+
         // Check if role is assigned to any users
         if ($role->users()->count() > 0) {
             Session::flash('error', 'Cannot delete role that is assigned to users');
+
             return redirect()->route('role.index');
         }
-        
+
         $role->delete();
-        
+
         Session::flash('success', 'Role successfully deleted');
+
         return redirect()->route('role.index');
     }
 }
