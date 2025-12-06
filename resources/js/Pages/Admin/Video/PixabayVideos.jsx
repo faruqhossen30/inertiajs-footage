@@ -5,7 +5,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/Components/button';
 
-export default function PizabayVideos({ items = [] }) {
+export default function PizabayVideos({ items = [], existIds = [] }) {
+    console.log(existIds);
+    
     const params = route().params;
     const { data, setData, post, processing, errors, reset } = useForm({
         videos: [],
@@ -110,7 +112,7 @@ export default function PizabayVideos({ items = [] }) {
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className="relative flex items-center space-x-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 shadow-sm  hover:border-gray-400"
+                        className={`relative flex items-center space-x-3 rounded-lg border ${existIds.includes(item.id) ? 'border-green-700 shadow-gray-700' : 'dark:border-gray-700 border-gray-300'}  bg-white dark:bg-gray-800 p-3 shadow-sm  hover:border-gray-400`}
                     >
                         <div className="flex h-6 items-center">
                             <input

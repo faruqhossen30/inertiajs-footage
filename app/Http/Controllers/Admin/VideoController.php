@@ -59,9 +59,13 @@ class VideoController extends Controller
         $response = Http::get($url);
         $data = $response->json();
 
-        // return $data['hits'];
+        $data['hits'];
+        $ids = collect($data['hits'])->pluck('id')->toArray();
 
-        return Inertia::render('Admin/Video/PixabayVideos', ['items' => $data['hits']]);
+        $existIds = Video::whereIn('povider_id', $ids)->pluck('povider_id')->toArray();
+
+
+        return Inertia::render('Admin/Video/PixabayVideos', ['items' => $data['hits'],'existIds'=>$existIds]);
     }
 
     public function pixabayStore(Request $request)
