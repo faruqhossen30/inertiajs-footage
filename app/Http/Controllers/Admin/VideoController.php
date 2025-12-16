@@ -161,6 +161,9 @@ class VideoController extends Controller
      */
     public function enqueueDownloads(Request $request)
     {
+        // Reset the stop flag so downloads can proceed
+        \Illuminate\Support\Facades\Cache::forget('stop_video_downloads');
+
         $videos = Video::query()
             ->where('status', 'list')
             ->orderBy('id')
@@ -178,6 +181,23 @@ class VideoController extends Controller
         Bus::chain($jobs)->dispatch();
 
         return back()->with('success', 'Enqueued ' . count($jobs) . ' video downloads.');
+    }
+
+    /**
+     * Stop all pending downloads and clear the queue.
+     */
+    public function stopDownloads()
+    {
+        // Set a flag to stop any running chains
+        \Illuminate\Support\Facades\Cache::forever('stop_video_downloads', true);
+
+        // Clear the jobs table (assuming database driver)
+        \Illuminate\Support\Facades\DB::table('jobs')->delete();
+
+        // Reset 'run' status videos back to 'list' so they can be re-queued later
+        Video::where('status', 'run')->update(['status' => 'list']);
+
+        return back()->with('success', 'All downloads stopped and queue cleared.');
     }
 
     /**

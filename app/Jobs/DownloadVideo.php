@@ -26,6 +26,10 @@ class DownloadVideo implements ShouldQueue
 
     public function handle(DownloadService $downloader): void
     {
+        if (\Illuminate\Support\Facades\Cache::get('stop_video_downloads')) {
+            throw new \Exception('Downloads stopped by user.');
+        }
+
         $video = Video::findOrFail($this->videoId);
         $video->update(['status' => 'run']);
 

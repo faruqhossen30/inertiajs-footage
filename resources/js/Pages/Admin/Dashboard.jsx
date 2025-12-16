@@ -1,6 +1,6 @@
 import DashbardCard from '@/Components/Dashboard/DashbardCard';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PlayCircleIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { PlayCircleIcon, ArrowDownTrayIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Head, Link } from '@inertiajs/react';
 import { FlashMessage } from '@/Components/FlashMessage';
 import React from 'react';
@@ -15,11 +15,19 @@ export default function Dashboard({ flash,videos }) {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 <DashbardCard title={videos.total_done} subtitle="Tatal Videos" icon={<PlayCircleIcon className="w-6 h-6 text-white" />} />
-                <Link onClick={(e) => !confirm("Are you sure?") && e.preventDefault()} href={route('video.enqueue')} method="post" className="text-start">
+                <Link onClick={(e) => !confirm("Are you sure? This will start downloading all pending videos.") && e.preventDefault()} href={route('video.enqueue')} method="post" className="text-start">
                     <DashbardCard
                         title="Download Queue"
-                        subtitle={`${videos.total_list} Video is listed for download ${videos.total_run ? videos.total_run + 'Video is downloading ...' : ''}`}
+                        subtitle={`${videos.total_list} Video is listed for download ${videos.total_run ? ' | ' + videos.total_run + ' Video is downloading ...' : ''}`}
                         icon={<ArrowDownTrayIcon className="w-6 h-6 text-white" />}                      
+                        preserveScroll
+                    />
+                </Link>
+                <Link onClick={(e) => !confirm("Are you sure you want to STOP all downloads? This will clear the queue.") && e.preventDefault()} href={route('video.stop-downloads')} method="post" className="text-start">
+                    <DashbardCard
+                        title="Stop Downloads"
+                        subtitle="Clear queue & stop running"
+                        icon={<XCircleIcon className="w-6 h-6 text-white" />}
                         preserveScroll
                     />
                 </Link>

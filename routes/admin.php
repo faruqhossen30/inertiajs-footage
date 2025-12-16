@@ -23,6 +23,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('video/create', [VideoController::class, 'create'])->name('video.create');
     Route::post('video', [VideoController::class, 'pixabayStore'])->name('video.pixabay.store');
     Route::post('video/enqueue', [VideoController::class, 'enqueueDownloads'])->name('video.enqueue');
+    Route::post('video/stop-downloads', [VideoController::class, 'stopDownloads'])->name('video.stop-downloads');
 
     Route::resource('role', RoleController::class);
     Route::get('settings', [SettingController::class, 'index'])->name('settings');

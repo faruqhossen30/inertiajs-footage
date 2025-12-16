@@ -125,11 +125,11 @@ export default function PizabayVideos({ items = [], existIds = [], totalHits }) 
                     type="text" name="search" className="py-2 block w-full dark:bg-transparent border-gray-200 dark:border-gray-700 rounded-lg text-sm border-none focus:ring-0" placeholder="Search" />
             </div>
             <div className="space-x-5 flex items-center">
-                <select name="show"
+                <select name="order"
                     onChange={(e) => {
                         return router.get(route('video.create', params),
                             {
-                                provider: e.target.value
+                                order: e.target.value
                             },
                             {
                                 preserveState: true,
@@ -137,13 +137,12 @@ export default function PizabayVideos({ items = [], existIds = [], totalHits }) 
                             }
                         )
                     }}
-                    defaultValue={params.provider && params.provider}
+                    defaultValue={params.order && params.order}
                     className="py-2 px-3 pe-9 block border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-                    <option value="all">All</option>
-                    <option value="pixabay">Pizabay</option>
-                    <option value="freepik">Freepik</option>
-                    <option value="storyblocks">Story Blocks</option>
+                    <option value="popular">Popular</option>
+                    <option value="latest">Latest</option>
                 </select>
+                
                 <select name="per_page"
                     onChange={(e) => {
                         return router.get(route('video.create', params),
@@ -244,8 +243,8 @@ export default function PizabayVideos({ items = [], existIds = [], totalHits }) 
                                 <span aria-hidden="true" className="absolute inset-0 pointer-events-none" />
                                 <p className="text-sm font-medium text-gray-800 dark:text-gray-400">Tags : {item.tags}</p>
                                 <div className="truncate text-sm text-gray-800 dark:text-gray-400">
-                                    <span>Duration: {item.duration}s </span>
-                                    <span>Size: {(item.videos.medium?.size / 1024 / 1024).toFixed(2)} MB </span>
+                                    <span>Duration: <span className="font-extrabold">{item.duration}</span>s </span>
+                                    <span>Size: <span className="font-bold italic">{(item.videos.medium?.size / 1024 / 1024).toFixed(2)}</span> MB </span>
                                     <span>Width x Height: {item.videos.medium?.width} x {item.videos.medium?.height} </span>
                                 </div>
                             </div>
