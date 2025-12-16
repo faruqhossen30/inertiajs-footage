@@ -23,14 +23,6 @@ export default function Dashboard({ flash,videos }) {
                         preserveScroll
                     />
                 </Link>
-                {/* <DashbardCard
-                    title="Download Queue"
-                    subtitle="Enqueue pending videos"
-                    icon={<ArrowDownTrayIcon className="w-6 h-6 text-white" />}
-                    href={route('video.enqueue')}
-                    method="post"
-                    preserveScroll
-                /> */}
             </div>
 
             {flash?.success && <FlashMessage type="success" message={flash.success} />}

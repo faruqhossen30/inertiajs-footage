@@ -29,10 +29,21 @@ class VideoController extends Controller
      */
     public function create()
     {
-        $show = null;
-        if (isset($_GET['show']) && $_GET['show']) {
-            $show = $_GET['show'];
+        $per_page = null;
+        if (isset($_GET['per_page']) && $_GET['per_page']) {
+            $per_page = $_GET['per_page'];
         }
+
+        $page = null;
+        if (isset($_GET['page']) && $_GET['page']) {
+            $page = $_GET['page'];
+        }
+
+        $order = null;
+        if (isset($_GET['order']) && $_GET['order']) {
+            $order = $_GET['order'];
+        }
+
 
         $search = null;
         if (isset($_GET['search']) && $_GET['search']) {
@@ -43,15 +54,16 @@ class VideoController extends Controller
         if (isset($_GET['provider']) && $_GET['provider']) {
             $provider = $_GET['provider'];
         }
+
         $key = env('PIXABAY_API_KEY');
         $query = $search;
 
         $params = [
             'key' => $key,
             'q' => $search,
-            'order' => 'popular',
-            'page' => 1,
-            'per_page' => $show ?? 10,
+            'order' => $order ?? 'popular',
+            'page' => $page ?? 1,
+            'per_page' => $per_page ?? 10,
         ];
 
         $queryParams = http_build_query($params);
@@ -64,8 +76,17 @@ class VideoController extends Controller
 
         $existIds = Video::whereIn('povider_id', $ids)->pluck('povider_id')->toArray();
 
+        // return $data;
 
-        return Inertia::render('Admin/Video/PixabayVideos', ['items' => $data['hits'],'existIds'=>$existIds]);
+
+        return Inertia::render(
+            'Admin/Video/PixabayVideos',
+            [
+                'items' => $data['hits'],
+                'existIds' => $existIds,
+                'totalHits' => $data['totalHits'],
+            ]
+        );
     }
 
     public function pixabayStore(Request $request)
@@ -113,7 +134,7 @@ class VideoController extends Controller
                 $slug = $baseSlug;
                 $i = 1;
                 while (Tag::where('slug', $slug)->exists()) {
-                    $slug = $baseSlug.'-'.$i;
+                    $slug = $baseSlug . '-' . $i;
                     $i++;
                 }
 
@@ -130,7 +151,7 @@ class VideoController extends Controller
             }
         }
 
-        return 'store';
+        return  to_route('video.index');
     }
 
     public function store(Request $request) {}
@@ -156,7 +177,7 @@ class VideoController extends Controller
 
         Bus::chain($jobs)->dispatch();
 
-        return back()->with('success', 'Enqueued '.count($jobs).' video downloads.');
+        return back()->with('success', 'Enqueued ' . count($jobs) . ' video downloads.');
     }
 
     /**
@@ -167,6 +188,5 @@ class VideoController extends Controller
         Video::where('id', $id)->delete();
 
         return redirect()->route('video.index');
-
     }
 }

@@ -1,14 +1,98 @@
 
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import BreadcumComponent from '@/Components/Dashboard/BreadcumComponent';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { PlayIcon } from '@heroicons/react/24/solid';
 import { Button } from '@/Components/button';
+import Pagination from '@/Components/Pagination';
+import Modal from '@/Components/Modal';
+import { useState } from 'react';
 
-export default function PizabayVideos({ items = [], existIds = [] }) {
-    console.log(existIds);
-    
+export default function PizabayVideos({ items = [], existIds = [], totalHits }) {
+    const [showPlayer, setShowPlayer] = useState(false);
+    const [currentVideo, setCurrentVideo] = useState(null);
+
+    const handlePlay = (video) => {
+        setCurrentVideo(video);
+        setShowPlayer(true);
+    };
+
+    const totalVideos = totalHits ?? 500;
     const params = route().params;
+    const perpage = Number(params.per_page ?? 10);
+    const page = Number(params.page ?? 1);
+    const lastPage = Math.ceil(totalVideos / perpage);
+
+    const generateLinks = () => {
+        const links = [];
+        const urlParams = { ...params };
+
+        const makeUrl = (p) => {
+            if (p < 1 || p > lastPage) return null;
+            return route('video.create', { ...urlParams, page: p });
+        };
+
+        // Previous
+        links.push({
+            url: page > 1 ? makeUrl(page - 1) : null,
+            label: '&laquo; Previous',
+            active: false
+        });
+
+        const delta = 2;
+        const range = [];
+        for (let i = Math.max(2, page - delta); i <= Math.min(lastPage - 1, page + delta); i++) {
+            range.push(i);
+        }
+
+        if (page - delta > 2) {
+            range.unshift('...');
+        }
+        if (page + delta < lastPage - 1) {
+            range.push('...');
+        }
+
+        range.unshift(1);
+        if (lastPage > 1) {
+            range.push(lastPage);
+        }
+
+        range.forEach(i => {
+            if (i === '...') {
+                links.push({ url: null, label: '...', active: false });
+            } else {
+                links.push({
+                    url: makeUrl(i),
+                    label: i.toString(),
+                    active: page === i
+                });
+            }
+        });
+
+        // Next
+        links.push({
+            url: page < lastPage ? makeUrl(page + 1) : null,
+            label: 'Next &raquo;',
+            active: false
+        });
+
+        return links;
+    };
+
+    const links = generateLinks();
+
+    const pagination = {
+        total: totalVideos,
+        from: (page - 1) * perpage + 1,
+        to: Math.min(page * perpage, totalVideos),
+        current_page: page,
+        last_page: lastPage,
+    };
+
+
+
+
     const { data, setData, post, processing, errors, reset } = useForm({
         videos: [],
     });
@@ -60,11 +144,11 @@ export default function PizabayVideos({ items = [], existIds = [] }) {
                     <option value="freepik">Freepik</option>
                     <option value="storyblocks">Story Blocks</option>
                 </select>
-                <select name="show"
+                <select name="per_page"
                     onChange={(e) => {
                         return router.get(route('video.create', params),
                             {
-                                show: e.target.value
+                                per_page: e.target.value
                             },
                             {
                                 preserveState: true,
@@ -76,8 +160,9 @@ export default function PizabayVideos({ items = [], existIds = [] }) {
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
-                    <option value="40">40</option>
                     <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
                 </select>
             </div>
         </div>
@@ -147,8 +232,11 @@ export default function PizabayVideos({ items = [], existIds = [] }) {
                                 }}
                             />
                         </div>
-                        <div className="flex-shrink-0">
+                        <div className="flex-shrink-0 relative group cursor-pointer" onClick={() => handlePlay(item)}>
                             <img alt="" src={item.videos.medium?.thumbnail} className="h-16 rounded-md" />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-all rounded-md">
+                                <PlayIcon className="w-8 h-8 text-white opacity-80 group-hover:opacity-100" />
+                            </div>
                         </div>
                         <div className="min-w-0 flex-1">
                             <div className="focus:outline-none">
@@ -169,7 +257,38 @@ export default function PizabayVideos({ items = [], existIds = [] }) {
             <div className="py-5">
                 <Button type="submit" >Save</Button>
             </div>
+            <div className="py-5">
+                <Pagination pagination={pagination} links={links} />
+            </div>
         </form>
+
+        <Modal show={showPlayer} maxWidth="3xl" onClose={() => setShowPlayer(false)}>
+            {currentVideo && (
+                <div className="bg-black">
+                    <video
+                        src={currentVideo.videos.medium?.url}
+                        controls
+                        autoPlay
+                        className="w-full max-h-[80vh] mx-auto"
+                        poster={currentVideo.videos.medium?.thumbnail}
+                    />
+                    <div className="p-4 bg-white dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-800 dark:text-gray-400">
+                                    Tags: {currentVideo.tags}
+                                </p>
+                                <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                                    <span>Duration: {currentVideo.duration}s</span>
+                                    <span>Size: {(currentVideo.videos.medium?.size / 1024 / 1024).toFixed(2)} MB</span>
+                                    <span>Resolution: {currentVideo.videos.medium?.width} x {currentVideo.videos.medium?.height}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </Modal>
 
     </AuthenticatedLayout>
 }

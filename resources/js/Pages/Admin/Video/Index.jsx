@@ -12,7 +12,12 @@ export default function Index({ videos }) {
     return (
         <AuthenticatedLayout>
             <Head title="Videos" />
-            <Link href={route('video.create')}>Insert Video</Link>
+            {/* <Link href={route('video.create')} className="bg-gray-100 border-b rounded-t-xl py-3 px-4 md:py-4 md:px-5 dark:bg-gray-800 dark:border-neutral-700 m-2">Insert Video</Link> */}
+
+            <Button color="light" href={route('video.create')} className="my-2">
+                <PlusIcon />
+                Insert Video
+            </Button>
 
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
                 <Table dense >
@@ -31,7 +36,7 @@ export default function Index({ videos }) {
                             <TableRow key={item.id}>
                                 <TableCell className="font-medium">
                                     <span className="mx-5">{index + 1}</span>
-                                </TableCell>                                
+                                </TableCell>
 
                                 <TableCell>
                                     <img src={window.location.origin + '/server/' + item.thumbnail} alt="" className="h-10 rounded-sm" />
