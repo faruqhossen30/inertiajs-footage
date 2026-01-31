@@ -20,14 +20,13 @@ const VideoCard = ({ video, onPlay }) => {
                     loading="lazy"
                 />
             </div>
-
             {/* Top-left badges */}
             <div className="absolute left-3 top-3 flex items-center gap-2">
                 <span className="rounded bg-black/60 px-2 py-1 text-xs text-white">
                     {formatDuration(video.duration)}
                 </span>
                 <span className="rounded bg-black/60 px-2 py-1 text-xs text-white">
-                    {video.width}×{video.height}
+                    <ArrowDownTrayIcon className="h-4 w-4" />
                 </span>
             </div>
 
@@ -46,26 +45,10 @@ const VideoCard = ({ video, onPlay }) => {
             {/* Bottom content */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        {video.provider && (
-                            <span className="rounded bg-white/90 px-2 py-1 text-xs font-medium text-gray-800">
-                                {video.provider}
-                            </span>
-                        )}
-                        {video.author && (
-                            <span className="text-xs text-white/90">by {video.author}</span>
-                        )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <button className="inline-flex items-center rounded-full bg-white/90 p-2 text-gray-900 hover:bg-white">
-                            <HeartIcon className="h-4 w-4" />
-                        </button>
-                        <button className="inline-flex items-center rounded-full bg-white/90 p-2 text-gray-900 hover:bg-white">
-                            <ArrowDownTrayIcon className="h-4 w-4" />
-                        </button>
-                    </div>
+                    <p className="text-gray-100 text-sm line-clamp-1">{video.title}</p>
                 </div>
             </div>
+
         </div>
     );
 };

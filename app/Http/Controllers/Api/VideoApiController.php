@@ -77,11 +77,6 @@ class VideoApiController extends Controller
             $targetVideo->tags()->syncWithoutDetaching($tagIds);
         }
 
-
-
-
-
-
         return $request->all();
     }
 }

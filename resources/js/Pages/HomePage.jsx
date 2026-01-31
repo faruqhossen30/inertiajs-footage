@@ -60,12 +60,12 @@ const HomePage = ({ videos }) => {
       {/* Player Modal */}
       <Modal show={showPlayer} maxWidth="xl" onClose={() => setShowPlayer(false)}>
         {currentVideo && (
-          <div className="bg-black">
+          <div className="bg-white dark:bg-slate-800">
             <video src={window.location.origin + '/server/' + currentVideo.file_path} controls autoPlay className="w-full" poster={currentVideo.thumbnail} />
             <div className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{currentVideo.title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-400">{currentVideo.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {formatDuration(currentVideo.duration)} • {currentVideo.width}×{currentVideo.height} • {currentVideo.provider}
                   </p>

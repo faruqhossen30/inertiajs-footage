@@ -28,9 +28,10 @@ class HomePageController extends Controller
         }
 
         $videos = Video::when($search, function ($query) use ($search) {
-            $query->whereHas('tags', function ($tagsQuery) use ($search) {
+            $query->
+            where('title','like', "%{$search}%")
+            ->orWhereHas('tags', function ($tagsQuery) use ($search) {
                 $terms = array_filter(explode(' ', $search));
-    
                 $tagsQuery->where(function ($q) use ($terms) {
                     foreach ($terms as $term) {
                         $q->orWhere('tags.name', 'like', "%{$term}%");
