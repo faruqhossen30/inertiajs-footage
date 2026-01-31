@@ -22,7 +22,7 @@ return new class extends Migration
             $table->float('size')->nullable();
             $table->string('width')->nullable();
             $table->string('height')->nullable();
-            $table->integer('povider_id')->nullable();
+            $table->string('povider_id')->nullable();
             $table->enum('povider', ['all', 'pixabay', 'storyblocks', 'freepik'])->default('all');
             $table->enum('status', ['list', 'run', 'done'])->default('list');
             $table->timestamps();
