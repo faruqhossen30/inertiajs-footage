@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\VideoApiController;
 use App\Http\Resources\VideoResource;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -39,3 +40,5 @@ Route::get('videos', function () {
 
     return response()->json($videos);
 });
+
+Route::post('video/create', [VideoApiController::class, 'storeStoryBlocksVideo']);

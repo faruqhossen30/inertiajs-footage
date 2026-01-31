@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->integer('duration')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->string('video_qulity')->nullable();
+            $table->string('video_quality')->nullable();
             $table->float('size')->nullable();
             $table->string('width')->nullable();
             $table->string('height')->nullable();
+            $table->integer('povider_id')->nullable();
             $table->enum('povider', ['all', 'pixabay', 'storyblocks', 'freepik'])->default('all');
             $table->enum('status', ['list', 'run', 'done'])->default('list');
-            $table->integer('povider_id')->nullable();
             $table->timestamps();
         });
     }

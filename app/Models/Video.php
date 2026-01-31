@@ -16,14 +16,12 @@ class Video extends Model
         'folder',
         'duration',
         'thumbnail',
-        'video_qulity',
+        'video_quality',
         'size',
         'width',
         'height',
         'povider',
         'povider_id',
-        'file_name',
-        'file_path',
         'status',
 
     ];
@@ -34,6 +32,7 @@ class Video extends Model
             // Note: column name is 'povider' in schema; cast accordingly
             'povider' => VideoProvider::class,
             'status' => VideoStatus::class,
+            'duration' => 'integer'
         ];
     }
 

@@ -27,21 +27,19 @@ class HomePageController extends Controller
             $provider = $_GET['provider'];
         }
 
-        $videos = Video::select('videos.*')
-        ->leftJoin('tag_video', 'tag_video.video_id', 'videos.id')
-        ->leftJoin('tags', 'tags.id', 'tag_video.tag_id')
-        ->where('videos.status', 'done')
-        ->when($search, function ($query) use ($search) {
-            $terms = array_filter(explode(' ', $search));
+        $videos = Video::when($search, function ($query) use ($search) {
+            $query->whereHas('tags', function ($tagsQuery) use ($search) {
+                $terms = array_filter(explode(' ', $search));
     
-            $query->where(function ($q) use ($terms) {
-                foreach ($terms as $term) {
-                    $q->orWhere('tags.name', 'like', "%{$term}%");
-                }
+                $tagsQuery->where(function ($q) use ($terms) {
+                    foreach ($terms as $term) {
+                        $q->orWhere('tags.name', 'like', "%{$term}%");
+                    }
+                });
             });
         })
-        ->when($provider, fn($q) => $q->where('videos.provider', $provider))
-        ->paginate(10)->appends(request()->query());
+            ->paginate($per_page ?? 10)
+            ->appends(request()->query());
     
         return Inertia::render('HomePage', ['videos' => $videos]);
     }

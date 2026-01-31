@@ -47,3 +47,6 @@ Optional tweaks
 - If you’d like a separate card for “Enqueue only provider X” or “Enqueue a specific video id,” I can add route variants and card props to target those filters.
 
 - macOs `sudo ln -s /Volumes/Files/server "/Volumes/Files/project/laravel/inertiajs-footage/public"`
+
+
+- macOs `php artisan videos:download-thumbnails`
