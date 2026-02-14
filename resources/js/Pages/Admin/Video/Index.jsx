@@ -108,8 +108,8 @@ export default function Index({ videos, categories = [], subCategories = [], fil
                                 </TableCell>
                                 <TableCell className="font-medium">
                                     <div className="space-y-1">
-                                        <div>{item.title ?? '—'}</div>
-                                        <div className="flex flex-wrap gap-1">
+                                        <div className="truncate max-w-[16rem] sm:max-w-[20rem]">{item.title ?? '—'}</div>
+                                        <div className="flex flex-wrap gap-1 max-w-[20rem]">
                                             {(Array.isArray(item.categories) ? item.categories : []).map((c) => (
                                                 <Badge color="blue" key={`c-${item.id}-${c.id}`}>{c.name}</Badge>
                                             ))}
