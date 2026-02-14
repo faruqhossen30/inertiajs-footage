@@ -19,11 +19,50 @@ class VideoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $videos = Video::latest('id')->paginate(10);
+        $query = Video::with([
+            'categories:id,name',
+            'subCategories:id,name,category_id',
+            'tags:id,name',
+        ]);
 
-        return Inertia::render('Admin/Video/Index', ['videos' => $videos]);
+        $order = $request->string('order')->toString();
+        $categoryId = $request->input('category_id');
+        $subCategoryId = $request->input('sub_category_id');
+
+        if (! empty($categoryId)) {
+            $query->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
+        if (! empty($subCategoryId)) {
+            $query->whereHas('subCategories', function ($q) use ($subCategoryId) {
+                $q->where('sub_categories.id', $subCategoryId);
+            });
+        }
+
+        if ($order === 'old') {
+            $query->oldest('id');
+        } else {
+            $query->latest('id');
+        }
+
+        $videos = $query->paginate(10)->withQueryString();
+
+        $categories = Category::orderBy('name')->get(['id', 'name']);
+        $subCategories = SubCategory::orderBy('name')->get(['id', 'name', 'category_id']);
+
+        return Inertia::render('Admin/Video/Index', [
+            'videos' => $videos,
+            'categories' => $categories,
+            'subCategories' => $subCategories,
+            'filters' => [
+                'order' => $order ?: 'latest',
+                'category_id' => $categoryId,
+                'sub_category_id' => $subCategoryId,
+            ],
+        ]);
     }
 
     /**
