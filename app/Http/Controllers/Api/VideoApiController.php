@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Tag;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class VideoApiController extends Controller
@@ -13,34 +16,42 @@ class VideoApiController extends Controller
     public function storeStoryBlocksVideo(Request $request)
     {
 
-        $request->validate([
-            'title' => 'required',
-            'file_path' => 'required|string',
-            'duration' => 'nullable'
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'assetId' => ['required', 'string'],
+            'file_name' => ['required', 'string'],
+            'file_path' => ['required', 'string'],
+            'keywords' => ['nullable', 'string'],
+            'thumbnail' => ['nullable', 'string'],
+            'duration' => ['nullable', 'integer'],
+            'video_quality' => ['nullable', 'string'],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => ['integer', 'exists:categories,id'],
+            'subcategory_ids' => ['nullable', 'array'],
+            'subcategory_ids.*' => ['integer', 'exists:sub_categories,id'],
         ]);
 
         $keywords = array_filter(array_unique(array_map(function ($t) {
             return trim($t);
-        }, explode(',', $request->keywords))));
-
+        }, explode(',', $validated['keywords'] ?? ''))));
 
         // Find existing video by provider and provider_id; create if not found
-        $targetVideo = Video::where('povider_id', $request->assetId)
+        $targetVideo = Video::where('povider_id', $validated['assetId'])
             ->first();
 
         if (! $targetVideo) {
             $targetVideo = Video::create([
-                'title' => $request->title,
+                'title' => $validated['title'],
                 'povider'    => 'storyblocks',
-                'povider_id' => $request->assetId,
-                'file_name'  => $request->file_name,
-                'file_path'  => 'videos/' . $request->file_name,
-                'thumbnail'  => $request->thumbnail,
+                'povider_id' => $validated['assetId'],
+                'file_name'  => $validated['file_name'],
+                'file_path'  => 'videos/' . $validated['file_name'],
+                'thumbnail'  => $validated['thumbnail'] ?? null,
                 'width'      => null,
                 'height'     => null,
                 'size'       => null,
-                'duration'   => $request->duration,
-                'video_quality'   => $request->video_quality,
+                'duration'   => $validated['duration'] ?? null,
+                'video_quality'   => $validated['video_quality'] ?? null,
             ]);
         }
 
@@ -75,6 +86,26 @@ class VideoApiController extends Controller
 
         if (! empty($tagIds)) {
             $targetVideo->tags()->syncWithoutDetaching($tagIds);
+        }
+
+        if (array_key_exists('category_ids', $validated)) {
+            $targetVideo->categories()->syncWithoutDetaching($validated['category_ids'] ?? []);
+        }
+
+        $categoryIds = $validated['category_ids'] ?? [];
+        $requestedSubIds = $validated['subcategory_ids'] ?? [];
+        $allowedSubIds = [];
+        if (! empty($requestedSubIds)) {
+            $allowedSubIds = SubCategory::query()
+                ->whereIn('id', $requestedSubIds)
+                ->when(! empty($categoryIds), function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds);
+                })
+                ->pluck('id')
+                ->all();
+        }
+        if (! empty($allowedSubIds)) {
+            $targetVideo->subCategories()->syncWithoutDetaching($allowedSubIds);
         }
 
         return $request->all();

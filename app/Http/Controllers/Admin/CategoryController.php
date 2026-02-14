@@ -36,15 +36,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
-
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:categories,name',
         ]);
+
+        $slug = Str::slug($request->name);
+        if (Category::where('slug', $slug)->exists()) {
+            return back()->withErrors(['name' => 'Slug already exists for a similar name.'])->withInput();
+        }
 
         $data = [
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'description' => $request->description,
             'user_id' => Auth::user()->id,
         ];
@@ -82,12 +85,17 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:categories,name,'.$id,
         ]);
+
+        $slug = Str::slug($request->name);
+        if (Category::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+            return back()->withErrors(['name' => 'Slug already exists for a similar name.'])->withInput();
+        }
 
         $data = [
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'description' => $request->description,
             'user_id' => Auth::user()->id,
         ];

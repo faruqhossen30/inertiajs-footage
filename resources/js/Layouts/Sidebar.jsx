@@ -41,6 +41,7 @@ function classNames(...classes) {
 const navigation = [
     { name: 'Dashboard', href: route('dashboard'), icon: HomeIcon, current: true },
     { name: 'Category', href: route('category.index'), icon: FolderIcon, current: false },
+    { name: 'SubCategory', href: route('sub-category.index'), icon: FolderIcon, current: false },
     { name: 'API KEY', href: route('api-key.index'), icon: KeyIcon, current: false },
     { name: 'Video', href: route('video.index'), icon: VideoCameraIcon, current: false },
 ];

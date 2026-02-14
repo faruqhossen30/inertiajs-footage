@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\DownloadVideo;
+use App\Models\Category;
 use App\Models\Tag;
+use App\Models\SubCategory;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -155,6 +157,63 @@ class VideoController extends Controller
     }
 
     public function store(Request $request) {}
+
+    public function edit(Video $video)
+    {
+        $allCategories = Category::orderBy('name')->get(['id', 'name', 'slug']);
+        $allSubCategories = SubCategory::orderBy('name')->get(['id', 'name', 'slug', 'category_id']);
+        $allTags = Tag::orderBy('name')->get(['id', 'name', 'slug']);
+
+        $selectedCategoryIds = $video->categories()->pluck('categories.id');
+        $selectedSubCategoryIds = $video->subCategories()->pluck('sub_categories.id');
+        $selectedTagIds = $video->tags()->pluck('tags.id');
+
+        return Inertia::render('Admin/Video/Edit', [
+            'video' => $video,
+            'tags' => $allTags,
+            'categories' => $allCategories,
+            'subCategories' => $allSubCategories,
+            'selectedCategoryIds' => $selectedCategoryIds,
+            'selectedSubCategoryIds' => $selectedSubCategoryIds,
+            'selectedTagIds' => $selectedTagIds,
+        ]);
+    }
+
+    public function update(Request $request, Video $video)
+    {
+        $validated = $request->validate([
+            'title' => ['nullable', 'string', 'max:255'],
+            'tag_ids' => ['array'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'category_ids' => ['array'],
+            'category_ids.*' => ['integer', 'exists:categories,id'],
+            'sub_category_ids' => ['array'],
+            'sub_category_ids.*' => ['integer', 'exists:sub_categories,id'],
+        ]);
+
+        if (array_key_exists('title', $validated)) {
+            $video->title = $validated['title'];
+        }
+        $video->save();
+
+        $video->tags()->sync($validated['tag_ids'] ?? []);
+        $video->categories()->sync($validated['category_ids'] ?? []);
+        $categoryIds = $validated['category_ids'] ?? [];
+        $requestedSubIds = $validated['sub_category_ids'] ?? [];
+        $allowedSubIds = [];
+        if (! empty($requestedSubIds)) {
+            $allowedSubIds = SubCategory::query()
+                ->whereIn('id', $requestedSubIds)
+                ->when(! empty($categoryIds), function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds);
+                })
+                ->pluck('id')
+                ->all();
+        }
+        $video->subCategories()->sync($allowedSubIds);
+
+        return redirect()->route('video.index')->with('success', 'Video updated successfully.');
+    }
 
     /**
      * Enqueue pending video downloads to queue and return a JSON response.

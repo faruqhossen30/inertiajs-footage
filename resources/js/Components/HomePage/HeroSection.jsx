@@ -32,7 +32,7 @@ const HeroSection = () => {
                                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
                                 <input
                                     onChange={(e) => {
-                                        return router.get(route('homepage', params),
+                                        return router.get(route('search'),
                                             {
                                                 search: e.target.value
                                             },
@@ -58,7 +58,10 @@ const HeroSection = () => {
                             {['Drone', '4K', 'Slow Motion', 'Timelapse', 'Sunset'].map((t) => (
                                 <button
                                     key={t}
-                                    onClick={() => setQuery(t)}
+                                    onClick={() => {
+                                        setQuery(t);
+                                        router.get(route('search'), { search: t });
+                                    }}
                                     className="rounded-full border border-gray-300 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
                                 >
                                     {t}

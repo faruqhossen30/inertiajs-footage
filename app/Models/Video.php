@@ -42,4 +42,18 @@ class Video extends Model
             ->using(VideoTag::class)
             ->withTimestamps();
     }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'video_categories', 'video_id', 'category_id')
+            ->withTimestamps();
+    }
+
+    public function subCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(SubCategory::class, 'video_sub_categories', 'video_id', 'sub_category_id')
+            ->using(VideoSubCategory::class)
+            ->withTimestamps();
+    }
+
 }

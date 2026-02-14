@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,15 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('123'),
-        ]);
-
-        Category::factory(5)->create();
-
         $this->call([
+            AdminSeeder::class,
+            CategorySeeder::class,
+            SubCategorySeeder::class,
+            TagSeeder::class,
+            VideoSeeder::class,
             ApiKeySeeder::class,
         ]);
     }

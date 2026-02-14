@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\PixabayController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomePageController::class, 'homePage'])->name('homepage');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Pixabay API Routes
 Route::middleware(['auth', 'verified'])->group(function () {
