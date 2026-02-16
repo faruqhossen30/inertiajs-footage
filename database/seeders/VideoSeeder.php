@@ -32,7 +32,7 @@ class VideoSeeder extends Seeder
         $subCategories = SubCategory::all();
         $tags = Tag::all();
 
-        for ($i = 1; $i <= 200; $i++) {
+        for ($i = 1; $i <= 300; $i++) {
             $video = Video::firstOrCreate(
                 ['title' => fake()->sentence()],
                 [

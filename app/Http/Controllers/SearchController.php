@@ -19,10 +19,12 @@ class SearchController extends Controller
 
         $per_page = 10;
         if ($request->has('show')) {
-            $per_page = $request->get('show');
+            $per_page = (int) $request->get('show');
         }
 
-        $videos = Video::query();
+        $order = $request->get('order', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $videos = Video::query()->orderBy('id', $order);
 
         if ($search) {
             $videos->where(function ($query) use ($search) {
@@ -61,14 +63,21 @@ class SearchController extends Controller
 
         $videos = $videos->with('tags')->paginate($per_page)->appends($request->query());
 
-        $categories = Category::with('subCategories')->where('status', true)->get();
+        $categories = Category::with([
+            'subCategories' => function ($query) {
+                $query->where('status', true)->withCount('videos');
+            },
+        ])
+            ->withCount('videos')
+            ->where('status', true)
+            ->get();
         $tags = Tag::where('status', true)->limit(20)->get();
 
         return Inertia::render('SearchPage', [
             'videos' => $videos,
             'categories' => $categories,
             'tags' => $tags,
-            'filters' => $request->only(['search', 'show', 'category', 'subcategory', 'tag']),
+            'filters' => $request->only(['search', 'show', 'order', 'category', 'subcategory', 'tag']),
         ]);
     }
 }

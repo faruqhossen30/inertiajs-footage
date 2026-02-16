@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { MagnifyingGlassIcon, ArrowDownTrayIcon, FunnelIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, ArrowDownTrayIcon, FunnelIcon, XMarkIcon, FolderIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/outline';
 import { Link, router, Head } from '@inertiajs/react';
 import { Disclosure } from '@headlessui/react';
-import { ChevronUpIcon } from '@heroicons/react/20/solid';
+import { ChevronUpIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import Modal from '@/Components/Modal';
 import VideoCard from '@/Components/HomePage/VideoCard';
 import Pagination from '@/Components/Pagination';
+import { Select } from '@/Components/select';
 
 const SearchPage = ({ videos, filters, categories, tags }) => {
     const [showPlayer, setShowPlayer] = useState(false);
@@ -40,17 +41,17 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-black">
+        <div className="min-h-screen  bg-gray-50 dark:bg-black">
             <Head title="Search Videos" />
 
             {/* Header / Search Bar */}
-            <div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-4 dark:border-gray-800 dark:bg-gray-900 sm:px-6 lg:px-8">
-                <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+            <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-4 dark:border-gray-800 dark:bg-gray-900">
+                <div className="container mx-auto flex items-center justify-between gap-4">
                     <Link href={route('homepage')} className="text-xl font-bold text-gray-900 dark:text-white">
                         Footage
                     </Link>
 
-                    <div className="flex-1 max-w-2xl">
+                    <div className="flex-1 max-w-6xl">
                         <div className="relative">
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -78,7 +79,7 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto container">
                 <div className="flex items-start gap-8 pt-8 pb-10">
 
                     {/* Sidebar (Desktop) */}
@@ -88,9 +89,16 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                             <div className="space-y-2">
                                 <button
                                     onClick={() => updateFilter('category', '')}
-                                    className={`block w-full text-left text-sm ${!filters.category ? 'font-bold text-indigo-600' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
+                                    className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                        !filters.category
+                                            ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                    }`}
                                 >
-                                    All Categories
+                                    <span className="flex items-center">
+                                        <Squares2X2Icon className="mr-2 h-4 w-4 text-indigo-500" />
+                                        <span>All Categories</span>
+                                    </span>
                                 </button>
                                 {categories.map((category) => (
                                     <Disclosure as="div" key={category.id} defaultOpen={filters.category === category.slug}>
@@ -99,9 +107,21 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                                                 <div className="flex items-center justify-between">
                                                     <button
                                                         onClick={() => updateFilter('category', category.slug)}
-                                                        className={`text-sm ${filters.category === category.slug ? 'font-bold text-indigo-600' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
+                                                        className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                                            filters.category === category.slug
+                                                                ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                                        }`}
                                                     >
-                                                        {category.name}
+                                                        <span className="flex items-center">
+                                                            <FolderIcon className="mr-2 h-4 w-4 text-indigo-500" />
+                                                            <span>{category.name}</span>
+                                                        </span>
+                                                        {category.videos_count != null && (
+                                                            <span className="ml-1 text-xs text-gray-400">
+                                                                ({category.videos_count})
+                                                            </span>
+                                                        )}
                                                     </button>
                                                     {category.sub_categories?.length > 0 && (
                                                         <Disclosure.Button className="p-1 text-gray-400 hover:text-gray-500">
@@ -116,9 +136,27 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                                                         <button
                                                             key={sub.id}
                                                             onClick={() => updateFilter('subcategory', sub.slug)}
-                                                            className={`block w-full text-left text-sm ${filters.subcategory === sub.slug ? 'font-semibold text-indigo-500' : 'text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'}`}
+                                                            className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                                                filters.subcategory === sub.slug
+                                                                    ? 'bg-indigo-50 text-indigo-500 font-semibold'
+                                                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                                            }`}
                                                         >
-                                                            {sub.name}
+                                                            <span className="flex items-center">
+                                                                <ChevronRightIcon
+                                                                    className={`mr-2 h-3 w-3 ${
+                                                                        filters.subcategory === sub.slug
+                                                                            ? 'text-indigo-500'
+                                                                            : 'text-gray-400 dark:text-gray-500'
+                                                                    }`}
+                                                                />
+                                                                <span>{sub.name}</span>
+                                                            </span>
+                                                            {sub.videos_count != null && (
+                                                                <span className="ml-1 text-xs text-gray-400">
+                                                                    ({sub.videos_count})
+                                                                </span>
+                                                            )}
                                                         </button>
                                                     ))}
                                                 </Disclosure.Panel>
@@ -152,17 +190,51 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                     {/* Main Content */}
                     <main className="flex-1">
 
-                        {/* Stats & Title */}
-                        <div className="mb-6">
-                            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                                {filters.search ? `Results for "${filters.search}"` :
-                                 filters.category ? categories.find(c => c.slug === filters.category)?.name || 'Category' :
-                                 filters.tag ? `Tag: ${filters.tag}` :
-                                 'All Videos'}
-                            </h1>
-                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                {videos.total} videos found
-                            </p>
+                        {/* Stats, Title, Controls */}
+                        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                                    {filters.search ? `Results for "${filters.search}"` :
+                                     filters.category ? categories.find(c => c.slug === filters.category)?.name || 'Category' :
+                                     filters.tag ? `Tag: ${filters.tag}` :
+                                     'All Videos'}
+                                </h1>
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    {videos.total} videos found
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                        Per page
+                                    </span>
+                                    <div className="w-28">
+                                        <Select
+                                            value={filters.show || '10'}
+                                            onChange={(e) => updateFilter('show', e.target.value)}
+                                        >
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                        Order
+                                    </span>
+                                    <div className="w-40">
+                                        <Select
+                                            value={filters.order || 'desc'}
+                                            onChange={(e) => updateFilter('order', e.target.value)}
+                                        >
+                                            <option value="desc">Newest (DESC)</option>
+                                            <option value="asc">Oldest (ASC)</option>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Videos Grid */}
@@ -215,17 +287,36 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                              <div className="space-y-2">
                                 <button
                                     onClick={() => { updateFilter('category', ''); setMobileFiltersOpen(false); }}
-                                    className={`block w-full text-left text-sm ${!filters.category ? 'font-bold text-indigo-600' : 'text-gray-600 dark:text-gray-400'}`}
+                                    className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                        !filters.category
+                                            ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                    }`}
                                 >
-                                    All Categories
+                                    <span className="flex items-center">
+                                        <Squares2X2Icon className="mr-2 h-4 w-4 text-indigo-500" />
+                                        <span>All Categories</span>
+                                    </span>
                                 </button>
                                 {categories.map((category) => (
                                     <div key={category.id} className="space-y-1">
                                         <button
                                             onClick={() => { updateFilter('category', category.slug); setMobileFiltersOpen(false); }}
-                                            className={`block w-full text-left text-sm ${filters.category === category.slug ? 'font-bold text-indigo-600' : 'text-gray-600 dark:text-gray-400'}`}
+                                            className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                                filters.category === category.slug
+                                                    ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            }`}
                                         >
-                                            {category.name}
+                                            <span className="flex items-center">
+                                                <FolderIcon className="mr-2 h-4 w-4 text-indigo-500" />
+                                                <span>{category.name}</span>
+                                            </span>
+                                            {category.videos_count != null && (
+                                                <span className="ml-1 text-xs text-gray-400">
+                                                    ({category.videos_count})
+                                                </span>
+                                            )}
                                         </button>
                                         {category.sub_categories?.length > 0 && (
                                             <div className="pl-4 space-y-1">
@@ -233,9 +324,27 @@ const SearchPage = ({ videos, filters, categories, tags }) => {
                                                     <button
                                                         key={sub.id}
                                                         onClick={() => { updateFilter('subcategory', sub.slug); setMobileFiltersOpen(false); }}
-                                                        className={`block w-full text-left text-sm ${filters.subcategory === sub.slug ? 'font-semibold text-indigo-500' : 'text-gray-500 dark:text-gray-500'}`}
+                                                        className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                                            filters.subcategory === sub.slug
+                                                                ? 'bg-indigo-50 text-indigo-500 font-semibold'
+                                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                                        }`}
                                                     >
-                                                        {sub.name}
+                                                        <span className="flex items-center">
+                                                            <ChevronRightIcon
+                                                                className={`mr-2 h-3 w-3 ${
+                                                                    filters.subcategory === sub.slug
+                                                                        ? 'text-indigo-500'
+                                                                        : 'text-gray-400 dark:text-gray-500'
+                                                                }`}
+                                                            />
+                                                            <span>{sub.name}</span>
+                                                        </span>
+                                                        {sub.videos_count != null && (
+                                                            <span className="ml-1 text-xs text-gray-400">
+                                                                ({sub.videos_count})
+                                                            </span>
+                                                        )}
                                                     </button>
                                                 ))}
                                             </div>
