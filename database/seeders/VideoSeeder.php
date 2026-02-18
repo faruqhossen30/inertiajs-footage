@@ -37,10 +37,10 @@ class VideoSeeder extends Seeder
                 ['title' => fake()->sentence()],
                 [
                     'file_name' => 'sample_video_' . $i . '.mp4',
-                    'file_path' => '/videos/sample_' . $i . '.mp4',
+                    'file_path' => 'videos/' . rand(1,4) . '.mp4',
                     // 'folder' => 'samples', // Removed as column doesn't exist
                     'duration' => rand(60, 300),
-                    'thumbnail' => 'https://via.placeholder.com/640x360.png?text=Video+' . $i,
+                    'thumbnail' => 'thumbnails/1.png',
                     'video_quality' => '1080p',
                     'size' => rand(1000000, 50000000), // 1MB to 50MB
                     'width' => 1920,

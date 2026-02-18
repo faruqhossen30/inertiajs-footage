@@ -11,8 +11,11 @@ class CategoryApiController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('subCategories')->get();
-        // return CategoryResource::collection($categories);
+        $categories = Category::with([
+            'subCategories' => function ($query) {
+                $query->withCount('videos');
+            },
+        ])->withCount('videos')->orderBy('name')->get();
         return response()->json($categories);
     }
 
