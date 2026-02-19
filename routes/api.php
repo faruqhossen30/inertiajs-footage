@@ -49,8 +49,8 @@ Route::get('videos', function (Request $request) {
         });
     }
 
-
     $videos = $query
+        ->inRandomOrder()
         ->paginate($per_page ?? 50)
         ->appends(request()->query());
 
