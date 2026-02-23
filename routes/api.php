@@ -60,6 +60,7 @@ Route::get('videos', function (Request $request) {
 });
 
 Route::post('video/create', [VideoApiController::class, 'storeStoryBlocksVideo']);
+Route::get('/{id}/check-video', [VideoApiController::class, 'checkVideo']);
 
 Route::get('categories', [CategoryApiController::class, 'index']);
 Route::get('categories/{id}', [CategoryApiController::class, 'show']);

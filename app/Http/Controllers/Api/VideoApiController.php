@@ -110,4 +110,22 @@ class VideoApiController extends Controller
 
         return $request->all();
     }
+
+    public function checkVideo(Request $request)
+    {
+        $video = Video::with(['categories:id,name','subCategories:id,name'])->firstWhere('povider_id', $request->id);
+
+        $file_exist = false;
+
+        if ($video && $video->file_path) {
+            $file_path = env('DISK_FILE_LOCATION') . $video->file_path;
+            $file_exist = file_exists($file_path);
+        }
+
+        return response()->json([
+            'video_exist' => (bool) $video,
+            'file_exist' => $file_exist,
+            'video'=>  $video
+        ]);
+    }
 }
