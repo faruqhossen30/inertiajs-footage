@@ -51,7 +51,7 @@ Route::get('videos', function (Request $request) {
 
     $videos = $query
         ->inRandomOrder()
-        ->paginate($per_page ?? 50)
+        ->paginate(1000)
         ->appends(request()->query());
 
     return VideoResource::collection($videos);
